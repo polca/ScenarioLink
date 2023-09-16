@@ -1,6 +1,8 @@
 from PySide2 import QtCore, QtWidgets
 
 from ...tables.tables import FoldsTable
+from ...signals import signals
+
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
 
@@ -15,3 +17,11 @@ class RightTab(PluginTab):
         self.layout.addWidget(horizontal_line())
         self.layout.addWidget(self.folds_table)
         self.setLayout(self.layout)
+
+        self._connect_signals()
+
+    def _connect_signals(self):
+        signals.get_fold_from_doi.connect(self.get_fold_from_doi)
+
+    def get_fold_from_doi(self, doi: str):
+        print('DOI:', doi)

@@ -2,7 +2,6 @@ import pandas as pd
 from activity_browser.ui.tables.models import PandasModel
 
 class FoldsModel(PandasModel):
-    HEADERS = [""]
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -19,5 +18,4 @@ class FoldsModel(PandasModel):
         self.updated.emit()
 
     def get_doi(self, idx):
-        doi = self._dataframe.iat[idx.row(), -1]
-        print('DOI', doi)
+        return self._dataframe.iat[idx.row(), -1]

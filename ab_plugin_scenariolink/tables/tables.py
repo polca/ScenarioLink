@@ -1,5 +1,6 @@
 from activity_browser.ui.tables.views import ABDataFrameView
 from .models import FoldsModel
+from ..signals import signals
 from PySide2 import QtWidgets, QtCore
 from PySide2.QtCore import Slot
 
@@ -22,13 +23,9 @@ class FoldsTable(ABDataFrameView):
             QtWidgets.QSizePolicy.Maximum
         ))
 
-
         self.model = FoldsModel(parent=self)
-
         self._connect_signals()
-
         self.model.sync()
-
 
     def _connect_signals(self):
         self.doubleClicked.connect(self.row_selected)
@@ -40,5 +37,6 @@ class FoldsTable(ABDataFrameView):
         row = index.row()
         last_column_index = self.model.columnCount() - 1
         last_item_in_row = self.model.index(row, last_column_index)
+        doi = self.model.get_doi(last_item_in_row)
+        signals.get_fold_from_doi.emit(doi)
 
-        self.model.get_doi(last_item_in_row)
