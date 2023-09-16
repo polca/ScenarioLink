@@ -33,17 +33,22 @@ class DataPackageModel(PandasModel):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.data_package = None
+        self.include = []
 
     def sync(self):
         if not self.data_package:
             return
-
         dp = self.data_package
-        self._dataframe = self.build_df_from_descriptor(dp.descriptor['scenarios'])
+        df = self.build_df_from_descriptor(dp.descriptor['scenarios'])
+        df = df.reindex(columns=['include', 'name', 'description'])
+        self._dataframe = df
         self.updated.emit()
 
     def build_df_from_descriptor(self, descr):
-        data = {}
+
+        if not self.include:
+            self.include = [True for _ in descr]
+        data = {'include': self.include}
         for dict_ in descr:
             for key, value in dict_.items():
                 if data.get(key, False):
