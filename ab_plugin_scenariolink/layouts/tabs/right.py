@@ -20,6 +20,7 @@ class RightTab(PluginTab):
 
     def _connect_signals(self):
         signals.get_datapackage_from_record.connect(self.get_datapackage)
+        signals.downloading_label.connect(self.update_dl_label)
 
     def construct_layout(self) -> None:
         self.layout.setAlignment(QtCore.Qt.AlignTop)
@@ -29,17 +30,22 @@ class RightTab(PluginTab):
         self.layout.addWidget(horizontal_line())
 
         # Folds table
-        self.layout.addWidget(QtWidgets.QLabel('Doubleclick to open a Fold dataset'))
+        self.layout.addWidget(QtWidgets.QLabel('Doubleclick to open a Fold dataset (If not present locally, it will be downloaded)'))
         self.folds_table.setToolTip('Doubleclick to open a Fold dataset')
         self.layout.addWidget(self.folds_table)
+        self.download_label = QtWidgets.QLabel('')
+        self.layout.addWidget(self.download_label)
         self.layout.addWidget(horizontal_line())
 
         self.setLayout(self.layout)
 
     def get_datapackage(self, doi: str):
-
         dp = download_files_from_zenodo(doi)
+        self.download_label.setText('')
 
         print(type(dp))
 
         return dp
+
+    def update_dl_label(self):
+        self.download_label.setText('Downloading Datapackage, this may take a while')

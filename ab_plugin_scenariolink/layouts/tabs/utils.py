@@ -3,6 +3,9 @@ import zipfile
 import os
 from datapackage import Package
 import appdirs
+from ...signals import signals
+from PySide2.QtWidgets import QApplication
+from PySide2.QtCore import Qt
 
 
 def download_files_from_zenodo(record_id):
@@ -20,7 +23,7 @@ def download_files_from_zenodo(record_id):
     json_data = response.json()
 
     # Create a folder to save the files
-    folder_name = appdirs.user_cache_dir('activity-browser', 'polca')
+    folder_name = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
@@ -28,10 +31,13 @@ def download_files_from_zenodo(record_id):
     zip_filename = f"{record_id}.zip"
 
     # check first if file exists, otherwise download it
-    if os.path.exists(f"{folder_name}/{zip_filename}"):
-        return Package(f"{folder_name}/{zip_filename}")
+    if os.path.exists(os.path.join(folder_name, zip_filename)):
+        return Package(os.path.join(folder_name, zip_filename))
 
-    with zipfile.ZipFile(zip_filename, 'w') as zipf:
+    signals.downloading_label.emit()
+
+    QApplication.setOverrideCursor(Qt.WaitCursor)
+    with zipfile.ZipFile(os.path.join(folder_name, zip_filename), 'w') as zipf:
         for idx, file_info in enumerate(json_data['files']):
             print(f"Downloading file {idx + 1}/{len(json_data['files'])}")
 
@@ -40,14 +46,18 @@ def download_files_from_zenodo(record_id):
 
             # Save the file to the folder
             local_filename = os.path.join(folder_name, zip_filename)
+            print('+ local file name', local_filename)
 
             with open(local_filename, 'wb') as f:
                 f.write(r.content)
 
             # Add the files to the ZIP archive
-            zipf.write(local_filename, os.path.basename(local_filename))
+            zipf.write(folder_name, os.path.basename(local_filename))
+            print('+ base name', os.path.basename(local_filename))
 
-    return Package(f"{folder_name}/{zip_filename}")
+    print(os.path.join(folder_name, zip_filename))
+    QApplication.restoreOverrideCursor()
+    return Package(os.path.join(folder_name, zip_filename))
 
 
 
