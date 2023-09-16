@@ -8,7 +8,7 @@ if root_dir:
     os.chdir(root_dir)
 accepted_filetypes = (".html", ".png", ".svg", ".js", ".css")
 
-for dirpath, dirnames, filenames in os.walk("ab_plugin_template"):
+for dirpath, dirnames, filenames in os.walk("ScenarioLink"):
     # Ignore dirnames that start with '.'
     if ('__init__.py' in filenames
             or any(x.endswith(accepted_filetypes) for x in filenames)):
@@ -23,15 +23,15 @@ else:
     version = os.environ.get('GIT_DESCRIBE_TAG', '0.0.0')
 
 setup(
-    name="ab-plugin-template",
+    name="ScenarioLink",
     version=version,
     packages=packages,
     include_package_data=True,
-    author="Rémy Le Calloch",
-    author_email="remy@lecalloch.net",
+    author="Romain Sacchi, Marc van der Meide",
+    author_email="romain.sacchi@psi.ch, m.t.van.der.meide@cml.leidenuniv.nl",
     license=open('LICENSE.txt').read(),
     install_requires=[], # dependency management in conda recipe
-    url="https://github.com/Pan6ora/activity-browser-plugin-template",
+    url="https://github.com/polca/ScenarioLink",
     long_description=open('README.md').read(),
-    description="An empty plugin to start from",
+    description="Activity Browser plugin to download scenario based LCA databases ",
     )
