@@ -1,6 +1,6 @@
 import activity_browser as ab
 
-from .layouts.tabs import LeftTab, RightTab
+from .layouts.tabs import RightTab
 
 class Plugin(ab.Plugin):
 
@@ -12,8 +12,7 @@ class Plugin(ab.Plugin):
 
     def load(self):
         self.rightTab = RightTab(self)
-        self.leftTab = LeftTab(self)
-        self.tabs = [self.rightTab, self.leftTab]
+        self.tabs = [self.rightTab]
 
     def close(self):
         return
