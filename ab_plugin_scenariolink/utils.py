@@ -4,7 +4,7 @@ import os
 import tempfile
 from datapackage import Package
 import appdirs
-from ...signals import signals
+from ab_plugin_scenariolink.signals import signals
 from PySide2.QtWidgets import QApplication
 from PySide2.QtCore import Qt
 
@@ -12,7 +12,6 @@ from PySide2.QtCore import Qt
 def download_files_from_zenodo(record_id):
     # Define the API endpoint
     url = f"https://zenodo.org/api/records/{record_id}"
-    print(url)
 
     # Send a GET request to fetch the raw JSON content
     response = requests.get(url)
@@ -61,9 +60,6 @@ def download_files_from_zenodo(record_id):
                 for root, _, files in os.walk(tmpdirname):
                     for file in files:
                         final_zip.write(os.path.join(root, file), file)
-
-
-
 
     QApplication.restoreOverrideCursor()
     return Package(os.path.join(folder_name, zip_filename))

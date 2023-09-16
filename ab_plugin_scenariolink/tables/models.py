@@ -1,6 +1,7 @@
 import pandas as pd
 from urllib.error import HTTPError
 from activity_browser.ui.tables.models import PandasModel
+from ..utils import download_files_from_zenodo
 
 class FoldsModel(PandasModel):
 
@@ -26,3 +27,32 @@ class FoldsModel(PandasModel):
     def get_record(self, idx):
         return self._dataframe.iat[idx.row(), -1]
 
+
+class DataPackageModel(PandasModel):
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.data_package = None
+
+    def sync(self):
+        if not self.data_package:
+            return
+
+        dp = self.data_package
+        self._dataframe = self.build_df_from_descriptor(dp.descriptor['scenarios'])
+        self.updated.emit()
+
+    def build_df_from_descriptor(self, descr):
+        data = {}
+        for dict_ in descr:
+            for key, value in dict_.items():
+                if data.get(key, False):
+                    data[key].append(value)
+                else:
+                    data[key] = [value]
+        return pd.DataFrame(data)
+
+    def get_datapackage(self, dp_name: str):
+        dp = download_files_from_zenodo(dp_name)
+        self.data_package = dp
+        self.sync()

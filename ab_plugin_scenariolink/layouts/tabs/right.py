@@ -1,12 +1,10 @@
 from PySide2 import QtCore, QtWidgets
 
-from ...tables.tables import FoldsTable
+from ...tables.tables import FoldsTable, DataPackageTable
 from ...signals import signals
 
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
-
-from .utils import download_files_from_zenodo
 
 class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
@@ -19,8 +17,8 @@ class RightTab(PluginTab):
         self._connect_signals()
 
     def _connect_signals(self):
-        signals.get_datapackage_from_record.connect(self.get_datapackage)
         signals.downloading_label.connect(self.update_dl_label)
+        self.data_package_table.model.updated.connect(self.reset_dl_label)
 
     def construct_layout(self) -> None:
         self.layout.setAlignment(QtCore.Qt.AlignTop)
@@ -37,16 +35,17 @@ class RightTab(PluginTab):
         self.layout.addWidget(self.download_label)
         self.layout.addWidget(horizontal_line())
 
+        # Datapackage table
+        self.data_package_table = DataPackageTable()
+        self.layout.addWidget(self.data_package_table)
+        self.layout.addWidget(horizontal_line())
+        self.layout.addStretch()
+
         self.setLayout(self.layout)
-
-    def get_datapackage(self, doi: str):
-        dp = download_files_from_zenodo(doi)
-        self.download_label.setText('')
-
-        print(dp.descriptor["scenarios"])
-
-        return dp
 
     def update_dl_label(self):
         print('++ DL label should be updated')
         self.download_label.setText('Downloading Datapackage, this may take a while')
+
+    def reset_dl_label(self):
+        self.download_label.setText('')
