@@ -1,6 +1,6 @@
 import activity_browser as ab
 
-from .layouts.tabs import LeftTab, RightTab
+from .layouts.tabs import RightTab
 
 class Plugin(ab.Plugin):
 
