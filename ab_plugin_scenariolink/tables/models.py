@@ -12,13 +12,13 @@ class FoldsModel(PandasModel):
         # url to fetch scenarios list form
         url = "https://raw.githubusercontent.com/polca/ScenarioLink/main/ab_plugin_scenarioLink/scenarios%20list/list.csv"
         # load pandas dataframe from url
-        # and specificy that the first row has headers
+        # and specify that the first row has headers
         self._dataframe = pd.read_csv(url, sep=';', header=0)
 
-        print(self._dataframe)
+        print('++ DF')
 
         self.updated.emit()
 
     def get_doi(self, idx):
-        doi = self._dataframe.iat[idx.row(), -1].text()
+        doi = self._dataframe.iat[idx.row(), -1]
         print('DOI', doi)

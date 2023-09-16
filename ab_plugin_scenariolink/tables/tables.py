@@ -25,18 +25,20 @@ class FoldsTable(ABDataFrameView):
 
         self.model = FoldsModel(parent=self)
 
-        self.model.sync()
         self._connect_signals()
 
+        self.model.sync()
+
+
     def _connect_signals(self):
-        #self.doubleClicked(self.row_selected)
-
-
+        self.doubleClicked.connect(self.row_selected)
         self.model.updated.connect(self.update_proxy_model)
         self.model.updated.connect(self.custom_view_sizing)
-        self.model.updated.connect(self.set_context_menu_policy)
 
     @Slot(QtCore.QModelIndex, name="getdoi")
-    def row_selected(self):
-        idx = self.selectedIndexes()
-        self.model.get_doi(idx)
+    def row_selected(self, index):
+        row = index.row()
+        last_column_index = self.model.columnCount() - 1
+        last_item_in_row = self.model.index(row, last_column_index)
+
+        self.model.get_doi(last_item_in_row)
