@@ -34,9 +34,6 @@ class FoldsTable(ABDataFrameView):
 
     @Slot(QtCore.QModelIndex, name="getdoi")
     def row_selected(self, index):
-        row = index.row()
-        last_column_index = self.model.columnCount() - 1
-        last_item_in_row = self.model.index(row, last_column_index)
-        doi = self.model.get_record(last_item_in_row)
+        doi = self.model.get_record(index)
         signals.get_datapackage_from_record.emit(doi)
 

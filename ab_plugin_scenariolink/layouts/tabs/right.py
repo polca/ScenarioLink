@@ -48,4 +48,5 @@ class RightTab(PluginTab):
         return dp
 
     def update_dl_label(self):
+        print('++ DL label should be updated')
         self.download_label.setText('Downloading Datapackage, this may take a while')

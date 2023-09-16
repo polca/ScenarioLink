@@ -15,9 +15,7 @@ class FoldsModel(PandasModel):
         try:
             # prevent fetching cached file
             # and specific that all columns should be of string type
-            df = pd.read_csv(url + "?nocache", header=0, sep=";")
-            # define the last column as string
-            df.iloc[:, -1] = df.iloc[:, -1].astype(str)
+            df = pd.read_csv(url + "?nocache", header=0, sep=";", dtype=str)
 
             self._dataframe = df
         except HTTPError as e:
