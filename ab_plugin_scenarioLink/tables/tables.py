@@ -1,6 +1,8 @@
 from activity_browser.ui.tables.views import ABDataFrameView
 from .models import FoldsModel
-from PySide2 import QtWidgets
+from PySide2 import QtWidgets, QtCore
+from PySide2.QtCore import Slot
+
 
 
 
@@ -22,9 +24,19 @@ class FoldsTable(ABDataFrameView):
             QtWidgets.QSizePolicy.Maximum
         ))
 
+
         self.model = FoldsModel(parent=self)
+        self.model.updated.connect(self.update_proxy_model)
+        self.model.updated.connect(self.custom_view_sizing)
+
         self.model.sync()
         self._connect_signals()
 
     def _connect_signals(self):
-        pass
+        self.doubleClicked(self.row_selected)
+        self.
+
+    @Slot(QtCore.QModelIndex, name="getdoi")
+    def row_selected(self):
+        idx = self.selectedIndexes()
+        self.model.get_doi(idx)

@@ -8,7 +8,6 @@ class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
         super(RightTab, self).__init__(plugin=plugin, panel="right", parent=parent)
 
-
         self.folds_table = FoldsTable(self)
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.setAlignment(QtCore.Qt.AlignTop)
@@ -16,3 +15,5 @@ class RightTab(PluginTab):
         self.layout.addWidget(horizontal_line())
         self.layout.addWidget(self.folds_table)
         self.setLayout(self.layout)
+
+        print('++ rows in table', self.folds_table.rowCount())

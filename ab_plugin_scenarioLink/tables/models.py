@@ -13,5 +13,12 @@ class FoldsModel(PandasModel):
         url = "https://raw.githubusercontent.com/polca/ScenarioLink/main/ab_plugin_scenarioLink/scenarios%20list/list.csv"
         # load pandas dataframe from url
         # and specificy that the first row has headers
-        self._dataframe = pd.read_csv(url, header=0)
+        self._dataframe = pd.read_csv(url, sep=';', header=0)
+
+        print(self._dataframe)
+
         self.updated.emit()
+
+    def get_doi(self, idx):
+        doi = self._dataframe.iat[idx.row(), -1].text()
+        print('DOI', doi)
