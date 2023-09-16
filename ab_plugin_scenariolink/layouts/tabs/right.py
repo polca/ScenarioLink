@@ -6,6 +6,8 @@ from ...signals import signals
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
 
+from .utils import download_files_from_zenodo
+
 class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
         super(RightTab, self).__init__(plugin=plugin, panel="right", parent=parent)
@@ -21,7 +23,12 @@ class RightTab(PluginTab):
         self._connect_signals()
 
     def _connect_signals(self):
-        signals.get_fold_from_doi.connect(self.get_fold_from_doi)
+        signals.get_datapackage_from_record.connect(self.get_datapackage)
 
-    def get_fold_from_doi(self, doi: str):
-        print('DOI:', doi)
+    def get_datapackage(self, doi: str):
+
+        dp = download_files_from_zenodo(doi)
+
+        print(dp.descriptor)
+
+        return dp

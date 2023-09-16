@@ -21,5 +21,6 @@ class FoldsModel(PandasModel):
 
         self.updated.emit()
 
-    def get_doi(self, idx):
+    def get_record(self, idx):
         return self._dataframe.iat[idx.row(), -1]
+
