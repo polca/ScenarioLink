@@ -8,7 +8,7 @@ if root_dir:
     os.chdir(root_dir)
 accepted_filetypes = (".html", ".png", ".svg", ".js", ".css")
 
-for dirpath, dirnames, filenames in os.walk("ab_plugin_scenarioLink"):
+for dirpath, dirnames, filenames in os.walk("ab_plugin_scenariolink"):
     # Ignore dirnames that start with '.'
     if ('__init__.py' in filenames
             or any(x.endswith(accepted_filetypes) for x in filenames)):
