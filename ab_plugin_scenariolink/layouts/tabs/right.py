@@ -43,7 +43,7 @@ class RightTab(PluginTab):
         dp = download_files_from_zenodo(doi)
         self.download_label.setText('')
 
-        print(type(dp))
+        print(dp.descriptor["scenarios"])
 
         return dp
 
