@@ -1,18 +1,19 @@
 import activity_browser as ab
 
-from .layouts.tabs import RightTab
+from .layouts.tabs import LeftTab, RightTab
 
 class Plugin(ab.Plugin):
 
     def __init__(self):
-        info = {
-            'name': "ScenarioLink",
+        infos = {
+            'name': "Template",
         }
-        ab.Plugin.__init__(self, info)
+        ab.Plugin.__init__(self, infos)
 
     def load(self):
         self.rightTab = RightTab(self)
-        self.tabs = [self.rightTab]
+        self.leftTab = LeftTab(self)
+        self.tabs = [self.rightTab, self.leftTab]
 
     def close(self):
         return
