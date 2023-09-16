@@ -1,5 +1,5 @@
 from activity_browser.ui.tables.views import ABDataFrameView
-from . import FoldsModel
+from .models import FoldsModel
 from PySide2 import QtWidgets
 
 
@@ -23,6 +23,7 @@ class FoldsTable(ABDataFrameView):
         ))
 
         self.model = FoldsModel(parent=self)
+        self.model.sync()
         self._connect_signals()
 
     def _connect_signals(self):
