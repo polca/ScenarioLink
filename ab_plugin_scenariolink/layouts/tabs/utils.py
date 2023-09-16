@@ -63,8 +63,6 @@ def download_files_from_zenodo(record_id):
                         final_zip.write(os.path.join(root, file), file)
 
 
-
-
     QApplication.restoreOverrideCursor()
     return Package(os.path.join(folder_name, zip_filename))
 
