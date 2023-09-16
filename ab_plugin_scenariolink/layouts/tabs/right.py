@@ -12,18 +12,29 @@ class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
         super(RightTab, self).__init__(plugin=plugin, panel="right", parent=parent)
 
-        self.folds_table = FoldsTable(self)
         self.layout = QtWidgets.QVBoxLayout()
-        self.layout.setAlignment(QtCore.Qt.AlignTop)
-        self.layout.addWidget(header(plugin.infos['name']))
-        self.layout.addWidget(horizontal_line())
-        self.layout.addWidget(self.folds_table)
-        self.setLayout(self.layout)
+        self.folds_table = FoldsTable(self)
 
+        self.construct_layout()
         self._connect_signals()
 
     def _connect_signals(self):
         signals.get_datapackage_from_record.connect(self.get_datapackage)
+
+    def construct_layout(self) -> None:
+        self.layout.setAlignment(QtCore.Qt.AlignTop)
+
+        # Header
+        self.layout.addWidget(header(self.plugin.infos['name']))
+        self.layout.addWidget(horizontal_line())
+
+        # Folds table
+        self.layout.addWidget(QtWidgets.QLabel('Doubleclick to open a Fold dataset'))
+        self.folds_table.setToolTip('Doubleclick to open a Fold dataset')
+        self.layout.addWidget(self.folds_table)
+        self.layout.addWidget(horizontal_line())
+
+        self.setLayout(self.layout)
 
     def get_datapackage(self, doi: str):
 
