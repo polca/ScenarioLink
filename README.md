@@ -1,8 +1,6 @@
-# Activity Browser plugin : Template
+# Activity Browser plugin : ScenarioLink
 
-An empty plugin to start from.
-
-This repo contains the documentation to create Activity Browser plugins. It also build an empty Activity Browser plugin available on Anaconda. 
+An Activity Browser plugin to fetch and reproduce scenario-based LCA databases (e.g., premise-generated databases).
 
 # Content
 
@@ -27,7 +25,7 @@ This repo contains the documentation to create Activity Browser plugins. It also
 - install this plugin with conda :
 
 ```
-conda install -c pan6ora ab-plugin-template
+conda install -c romainsacchi ab_plugin_scenariolink
 ```
 
 - start Activity Browser
@@ -67,7 +65,7 @@ You should now have only one branch called `main` and containing the content of 
 The repository already contains some files to get you started:
 
 - `.github` and `ci` folders to deploy your plugin to Anaconda
-- `ab_plugin_plugin_name` contains the plugin code
+- `ScenarioLink` contains the plugin code
 - `setup.py` file to create a python package
 - basic CHANGELOG, LICENSE and README
 
@@ -75,15 +73,11 @@ Before starting to add functionalities to the plugin you need to fill some metad
 
 ### Plugin infos
 
-Some keywords need to be changed in multiple files. The best way to doing that might be using a Search & Replace functionality in the project folder. These are keywords to change:
-
-- `plugin_name` (4 results in 3 files)
-- `one_line_description` (3 results in 2 files)
-- `plugin_url`: replace by github url (3 results in 2 files)
-- `plugin_author_email` (1 result in setup.py)
-- `plugin_author` (1 result in setup.py)
-
-The name of the code folder also needs to be changed with your plugin name.
+- `ScenarioLink`
+- `Plugin to fetch and locally reproduce scenario-based LCA databases`
+- `https://github.com/polca/ScenarioLink`
+- `m.t.van.der.meide@cml.leidenuniv.nl, romain.sacchi@psi.ch`
+- `Marc van der Meide, Romain Sacchi`
 
 ### Deploy to Anaconda
 

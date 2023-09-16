@@ -23,7 +23,7 @@ else:
     version = os.environ.get('GIT_DESCRIBE_TAG', '0.0.0')
 
 setup(
-    name="ScenarioLink",
+    name="ab_plugin_scenariolink",
     version=version,
     packages=packages,
     include_package_data=True,
@@ -33,5 +33,5 @@ setup(
     install_requires=[], # dependency management in conda recipe
     url="https://github.com/polca/ScenarioLink",
     long_description=open('README.md').read(),
-    description="Activity Browser plugin to download scenario based LCA databases ",
+    description="Activity Browser plugin to download scenario-based LCA databases ",
     )
