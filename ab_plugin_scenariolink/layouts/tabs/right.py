@@ -29,6 +29,6 @@ class RightTab(PluginTab):
 
         dp = download_files_from_zenodo(doi)
 
-        print(dp.descriptor)
+        print(type(dp))
 
         return dp

@@ -8,16 +8,20 @@ class FoldsModel(PandasModel):
         super().__init__(parent=parent)
 
     def sync(self):
-
         # url to fetch scenarios list form
         url = "https://raw.githubusercontent.com/polca/ScenarioLink/main/ab_plugin_scenariolink/scenarios%20list/list.csv"
         # load pandas dataframe from url
         # and specify that the first row has headers
         try:
-            self._dataframe = pd.read_csv(url, sep=';', header=0)
+            # prevent fetching cached file
+            # and specific that all columns should be of string type
+            df = pd.read_csv(url + "?nocache", header=0, sep=";")
+            # define the last column as string
+            df.iloc[:, -1] = df.iloc[:, -1].astype(str)
+
+            self._dataframe = df
         except HTTPError as e:
             print('++failed to import data', e)
-
 
         self.updated.emit()
 
