@@ -1,0 +1,32 @@
+package:
+  name: ab-plugin-template
+  version: "{{ GIT_DESCRIBE_TAG }}"
+
+source:
+  git_rev: main
+  git_url: https://github.com/Pan6ora/activity-browser-plugin-template.git
+
+build:
+  noarch: python
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  build:
+    - python =3.9
+    - setuptools
+    - conda-verify
+  run:
+    - activity-browser =2.8
+
+about:
+  home: https://github.com/Pan6ora/activity-browser-plugin-template
+  license: LGPL3+
+  license_family: LGPL
+  license_file: LICENSE.txt
+  summary: An empty plugin to start from
+  description: |
+    The [Activity Browser](https://github.com/LCA-ActivityBrowser/activity-browser)
+    is a graphical user interface for the [brightway2](https://brightway.dev/)
+    advanced life cycle assessment framework.
+    This plugin is a template to start creating new ones.
