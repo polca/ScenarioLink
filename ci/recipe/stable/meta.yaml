@@ -17,6 +17,7 @@ requirements:
     - setuptools
     - conda-verify
     - unfold
+    - zenodo_get
   run:
     - activity-browser>=2.8
 
