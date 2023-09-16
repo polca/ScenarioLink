@@ -15,5 +15,3 @@ class RightTab(PluginTab):
         self.layout.addWidget(horizontal_line())
         self.layout.addWidget(self.folds_table)
         self.setLayout(self.layout)
-
-        print('++ rows in table', self.folds_table.rowCount())

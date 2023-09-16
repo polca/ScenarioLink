@@ -25,8 +25,10 @@ class FoldsTable(ABDataFrameView):
 
         self.model = FoldsModel(parent=self)
 
-        self.model.sync()
         self._connect_signals()
+
+        self.model.sync()
+
 
     def _connect_signals(self):
         #self.doubleClicked(self.row_selected)
@@ -34,7 +36,6 @@ class FoldsTable(ABDataFrameView):
 
         self.model.updated.connect(self.update_proxy_model)
         self.model.updated.connect(self.custom_view_sizing)
-        self.model.updated.connect(self.set_context_menu_policy)
 
     @Slot(QtCore.QModelIndex, name="getdoi")
     def row_selected(self):

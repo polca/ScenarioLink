@@ -15,7 +15,7 @@ class FoldsModel(PandasModel):
         # and specificy that the first row has headers
         self._dataframe = pd.read_csv(url, sep=';', header=0)
 
-        print(self._dataframe)
+        print('++ DF')
 
         self.updated.emit()
 
