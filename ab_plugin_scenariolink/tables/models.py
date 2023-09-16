@@ -1,6 +1,8 @@
 import pandas as pd
 from urllib.error import HTTPError
+
 from activity_browser.ui.tables.models import PandasModel
+
 from ..utils import download_files_from_zenodo
 
 class FoldsModel(PandasModel):
@@ -9,7 +11,7 @@ class FoldsModel(PandasModel):
         super().__init__(parent=parent)
 
     def sync(self):
-        # url to fetch scenarios list form
+        # url to fetch scenarios list from
         url = "https://raw.githubusercontent.com/polca/ScenarioLink/main/ab_plugin_scenariolink/scenarios%20list/list.csv"
         # load pandas dataframe from url
         # and specify that the first row has headers
@@ -25,6 +27,7 @@ class FoldsModel(PandasModel):
         self.updated.emit()
 
     def get_record(self, idx):
+        """Get record from selected row."""
         return self._dataframe.iat[idx.row(), -1]
 
 
@@ -44,8 +47,8 @@ class DataPackageModel(PandasModel):
         self._dataframe = df
         self.updated.emit()
 
-    def build_df_from_descriptor(self, descr):
-
+    def build_df_from_descriptor(self, descr: list) -> pd.Dataframe:
+        """Build dataframe from descriptor data."""
         if not self.include:
             self.include = [True for _ in descr]
         data = {'include': self.include}
@@ -58,6 +61,7 @@ class DataPackageModel(PandasModel):
         return pd.DataFrame(data)
 
     def get_datapackage(self, dp_name: str):
+        """Retrieve datapackage (from zenodo or cache) and sync table."""
         dp = download_files_from_zenodo(dp_name)
         self.data_package = dp
         self.sync()

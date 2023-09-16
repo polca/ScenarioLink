@@ -1,10 +1,10 @@
 from PySide2 import QtCore, QtWidgets
 
-from ...tables.tables import FoldsTable, DataPackageTable
-from ...signals import signals
-
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
+
+from ...tables.tables import FoldsTable, DataPackageTable
+from ...signals import signals
 
 class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
@@ -21,6 +21,7 @@ class RightTab(PluginTab):
         self.data_package_table.model.updated.connect(self.reset_dl_label)
 
     def construct_layout(self) -> None:
+        """Construct the panel layout"""
         self.layout.setAlignment(QtCore.Qt.AlignTop)
 
         # Header
