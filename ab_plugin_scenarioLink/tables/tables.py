@@ -4,8 +4,6 @@ from PySide2 import QtWidgets, QtCore
 from PySide2.QtCore import Slot
 
 
-
-
 class FoldsTable(ABDataFrameView):
     """ Displays metadata for the databases found within the selected project.
 
@@ -26,15 +24,17 @@ class FoldsTable(ABDataFrameView):
 
 
         self.model = FoldsModel(parent=self)
-        self.model.updated.connect(self.update_proxy_model)
-        self.model.updated.connect(self.custom_view_sizing)
 
         self.model.sync()
         self._connect_signals()
 
     def _connect_signals(self):
-        self.doubleClicked(self.row_selected)
-        self.
+        #self.doubleClicked(self.row_selected)
+
+
+        self.model.updated.connect(self.update_proxy_model)
+        self.model.updated.connect(self.custom_view_sizing)
+        self.model.updated.connect(self.set_context_menu_policy)
 
     @Slot(QtCore.QModelIndex, name="getdoi")
     def row_selected(self):
