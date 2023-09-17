@@ -27,6 +27,16 @@ def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superst
     Returns:
         None: This function performs the unfolding operation but does not return anything.
     """
+
+    cache_folder = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
+    if not os.path.exists(cache_folder):
+        os.makedirs(cache_folder)
+
+    filepath = os.path.join(cache_folder, os.path.basename(filepath))
+
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"File {filepath} does not exist.")
+
     Unfold(filepath).unfold(
         dependencies=dependencies,
         scenarios=scenarios,
