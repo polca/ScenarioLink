@@ -42,7 +42,7 @@ def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superst
         dependencies=dependencies,
         scenarios=scenarios,
         superstructure=superstructure,
-    ).unfold()
+    )
 
 
 def download_files_from_zenodo(record_id: str) -> [Package, None]:
