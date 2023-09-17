@@ -24,7 +24,7 @@ class RightTab(PluginTab):
         self._connect_signals()
 
     def _connect_signals(self):
-        signals.generate_db.connect()
+        signals.generate_db.connect(self.generate_database)
 
     def construct_layout(self) -> None:
         """Construct the panel layout"""

@@ -32,6 +32,7 @@ def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superst
     if not os.path.exists(cache_folder):
         os.makedirs(cache_folder)
 
+    filepath = filepath + '.zip'
     filepath = os.path.join(cache_folder, os.path.basename(filepath))
 
     if not os.path.exists(filepath):
