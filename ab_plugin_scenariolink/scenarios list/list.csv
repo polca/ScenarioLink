@@ -1,2 +1,3 @@
 generator;generator version;creation date;model;scenario;source database;Zenodo record ID
-premise;1.6.8;2023-09-16;remind;SSP2-Base;ecoinvent 3.9;"8351309"
+premise;1.6.8;2023-09-16;remind;SSP2-Base;ecoinvent 3.9 cutoff;"8351309"
+premise;1.6.9;2023-09-17;remind;SSP2-Base;ecoinvent 3.9 cutoff;"8353132"
