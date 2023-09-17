@@ -124,3 +124,10 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
     QApplication.restoreOverrideCursor()
 
     return Package(os.path.join(folder_name, zip_filename))
+
+def package_from_path(path: str) -> [Package, None]:
+    """Create a package from the selected zip file"""
+    if not path.endswith('.zip'):
+        print("Error, file selected is not a .zip file.")
+        return
+    return Package(path)

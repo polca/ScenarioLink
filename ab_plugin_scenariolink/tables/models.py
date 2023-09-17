@@ -1,12 +1,13 @@
 """
 This module contains the models for the tables used in the ScenarioLink plugin.
 """
+from PySide2 import QtWidgets
 
 from urllib.error import HTTPError
 import pandas as pd
 
 from activity_browser.ui.tables.models import PandasModel
-from ..utils import download_files_from_zenodo
+from ..utils import download_files_from_zenodo, package_from_path
 from ..signals import signals
 
 
@@ -68,6 +69,7 @@ class DataPackageModel(PandasModel):
 
     def _connect_signals(self):
         signals.get_datapackage_from_record.connect(self.get_datapackage_from_record)
+        signals.get_datapackage_from_disk.connect(self.get_datapackage_from_disk)
 
     def sync(self) -> None:
         """
@@ -121,5 +123,18 @@ class DataPackageModel(PandasModel):
             dp_name (str): The name of the datapackage to retrieve.
         """
         dp = download_files_from_zenodo(dp_name)
+        self.sync_with_package(dp)
+
+    def get_datapackage_from_disk(self) -> None:
+        """"Start a dialog to retrieve a datapackage from disk."""
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            caption="Select Fold zip file",
+            filter='*.zip'
+        )
+        print('file selected from path:', path)
+        dp = package_from_path(path)
+        self.sync_with_package(dp)
+
+    def sync_with_package(self, dp):
         self.data_package = dp
         self.sync()

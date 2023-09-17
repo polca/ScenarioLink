@@ -93,14 +93,20 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.folds_table)
 
         # Fold custom importer
-        self.custom = QtWidgets.QLabel('PLACEHOLDER')
+        self.custom_layout = QtWidgets.QHBoxLayout()
+        self.custom = QtWidgets.QPushButton('Browse computer')
         self.custom.setVisible(False)
-        self.layout.addWidget(self.custom)
+        self.custom_layout.addWidget(self.custom)
+        self.custom_layout.addStretch()
+        self.custom_widg = QtWidgets.QWidget()
+        self.custom_widg.setLayout(self.custom_layout)
+        self.layout.addWidget(self.custom_widg)
 
         self.layout.addWidget(horizontal_line())
         self.setLayout(self.layout)
 
         self.radio_custom.toggled.connect(self.radio_toggled)
+        self.custom.clicked.connect(lambda: signals.get_datapackage_from_disk.emit())
 
     def radio_toggled(self, toggled: bool) -> None:
         self.use_table = not toggled
@@ -109,6 +115,7 @@ class FoldChooserWidget(QtWidgets.QWidget):
 
         self.custom.setVisible(toggled)
         signals.record_ready.emit(False)
+
 
 class ScenarioChooserWidget(QtWidgets.QWidget):
     def __init__(self):
