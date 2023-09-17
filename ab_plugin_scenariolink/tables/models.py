@@ -61,7 +61,7 @@ class DataPackageModel(PandasModel):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.data_package = None
-        self.include = []
+        self.include = None
 
     def sync(self) -> None:
         """
@@ -73,10 +73,11 @@ class DataPackageModel(PandasModel):
             return
 
         datapackage = self.data_package
+
+        # TODO emit signal to disable SDF and disable remaining checkbox
+
         dataframe = self.build_df_from_descriptor(datapackage.descriptor['scenarios'])
         dataframe = dataframe.reindex(columns=['include', 'name', 'description'])
-
-        #TODO write here a check if only 1 scenario is selected, if so, emit signal so we disable SDF option
 
         self._dataframe = dataframe
         self.updated.emit()
@@ -103,6 +104,7 @@ class DataPackageModel(PandasModel):
                 else:
                     data[key] = [value]
 
+        self.last_include = self.include
         return pd.DataFrame(data)
 
     def get_datapackage(self, dp_name: str) -> None:
