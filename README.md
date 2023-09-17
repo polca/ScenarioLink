@@ -54,6 +54,9 @@ The Activity Browser builds upon the [Brightway2](https://brightway.dev) LCA fra
 7. Choose whether to merge the selected scenarios into a single database (superstructure database) or reproduce them individually.
 8. Click `Import` to start the process.
 9. The plugin will ask you to select the databases in your project that will be used as source databases.
+
+    ![Source Database Selection](assets/source_database_selection.png)
+
 10. The plugin will then reproduce the selected scenario(s) and add them to your project.
 
 ## Contributing
