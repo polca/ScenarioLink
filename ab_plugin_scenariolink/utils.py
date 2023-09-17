@@ -1,5 +1,6 @@
 """
-Contains utility functions for the ScenarioLink plugin.
+Utility functions for the ScenarioLink plugin.
+This module contains various utility functions that are used throughout the plugin.
 """
 
 import zipfile
@@ -15,20 +16,17 @@ from PySide2.QtCore import Qt
 
 def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superstructure: bool) -> None:
     """
-    Unfold databases from a given filepath.
+    Unfold databases based on a given filepath and scenarios list.
 
-    :param filepath: Path to the database file.
-    :type filepath: str
-    :param scenarios: List of scenarios to unfold.
-    :type scenarios: list
-    :param dependencies: Dictionary of dependencies.
-    :type dependencies: dict
-    :param superstructure: Whether to unfold the superstructure.
-    :type superstructure: bool
+    Parameters:
+        filepath (str): The path to the database file.
+        scenarios (list): The list of scenarios to unfold.
+        dependencies (dict): A dictionary containing dependencies.
+        superstructure (bool): Flag to indicate if a superstructure should be unfolded.
 
-    Does not return anything.
+    Returns:
+        None: This function performs the unfolding operation but does not return anything.
     """
-
     Unfold(filepath).unfold(
         dependencies=dependencies,
         scenarios=scenarios,
@@ -38,38 +36,45 @@ def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superst
 
 def download_files_from_zenodo(record_id: str) -> [Package, None]:
     """
-    Download datapackages from Zenodo.
-    Returns a datapackage object.
+    Download datapackages from Zenodo based on a given record ID.
 
-    :param record_id: Zenodo record ID.
-    :type record_id: str
+    Parameters:
+        record_id (str): The Zenodo record ID.
+
+    Returns:
+        Package: A datapackage object containing the downloaded files.
+        None: Returns None if the download fails.
     """
 
-    # Define the API endpoint
+    # Zenodo API endpoint to fetch datapackages
     url = f"https://zenodo.org/api/records/{record_id}"
 
-    # Send a GET request to fetch the raw JSON content
+    # Perform GET request to fetch the raw JSON content
     response = requests.get(url, timeout=10)
 
+    # Handle unsuccessful requests
     if response.status_code != 200:
         print(f"Failed to get data from Zenodo. Status code: {response.status_code}")
         return None
 
     json_data = response.json()
 
-    # Create a folder to save the files
+    # Create a folder to save the downloaded files
     folder_name = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
-    # Create a ZIP file to store the downloaded files
+    # Define the ZIP filename based on the Zenodo record ID
     zip_filename = f"{record_id}.zip"
 
-    # check first if file exists, otherwise download it
+    # Check if the file already exists; if so, return the Package
     if os.path.exists(os.path.join(folder_name, zip_filename)):
         return Package(os.path.join(folder_name, zip_filename))
 
+    # Change cursor to indicate ongoing process
     QApplication.setOverrideCursor(Qt.WaitCursor)
+
+    # Create a final ZIP file to store the downloaded files
     with zipfile.ZipFile(os.path.join(folder_name, zip_filename), 'w') as final_zip:
         for idx, file_info in enumerate(json_data['files']):
             print(f"Downloading file {idx + 1}/{len(json_data['files'])}")
@@ -77,23 +82,24 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
             file_url = file_info['links']['self']
             response = requests.get(file_url, timeout=10)
 
-            # Create a temporary directory to hold the downloaded ZIP files and their extracted contents
+            # Create a temporary directory to store the downloaded ZIP files
             with tempfile.TemporaryDirectory() as tmpdirname:
                 downloaded_zip_path = os.path.join(tmpdirname, "downloaded.zip")
 
-                # Save the downloaded ZIP file
+                # Save the downloaded ZIP file locally
                 with open(downloaded_zip_path, 'wb') as file:
                     file.write(response.content)
 
-                # Extract the downloaded ZIP file
+                # Extract the ZIP file's contents
                 with zipfile.ZipFile(downloaded_zip_path, 'r') as downloaded_zip:
                     downloaded_zip.extractall(tmpdirname)
 
-                # Walk through the extracted files and add them to the final ZIP file
+                # Add the extracted files to the final ZIP file
                 for root, _, files in os.walk(tmpdirname):
                     for file in files:
                         final_zip.write(os.path.join(root, file), file)
 
+    # Restore the original cursor
     QApplication.restoreOverrideCursor()
 
     return Package(os.path.join(folder_name, zip_filename))
