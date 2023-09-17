@@ -9,6 +9,7 @@ class FoldsModel(PandasModel):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.selected_record = None
 
     def sync(self):
         # url to fetch scenarios list from
@@ -28,7 +29,9 @@ class FoldsModel(PandasModel):
 
     def get_record(self, idx):
         """Get record from selected row."""
-        return self._dataframe.iat[idx.row(), -1]
+        record = self._dataframe.iat[idx.row(), -1]
+        self.selected_record = record
+        return record
 
 
 class DataPackageModel(PandasModel):
@@ -45,6 +48,7 @@ class DataPackageModel(PandasModel):
         df = self.build_df_from_descriptor(dp.descriptor['scenarios'])
         df = df.reindex(columns=['include', 'name', 'description'])
         self._dataframe = df
+        #TODO write here a check if only 1 scenario is selected, if so, emit signal so we disable SDF option
         self.updated.emit()
 
     def build_df_from_descriptor(self, descr: list) -> pd.DataFrame:

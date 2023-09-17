@@ -1,10 +1,15 @@
 from PySide2 import QtCore, QtWidgets
+from PySide2.QtCore import Qt
+import brightway2 as bw
+from typing import List, Tuple
 
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
+from activity_browser.ui.widgets.dialog import DatabaseLinkingDialog
 
 from ...tables.tables import FoldsTable, DataPackageTable
 from ...signals import signals
+from ...utils import unfold_databases
 
 class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
@@ -19,7 +24,7 @@ class RightTab(PluginTab):
         self._connect_signals()
 
     def _connect_signals(self):
-        pass
+        signals.generate_db.connect()
 
     def construct_layout(self) -> None:
         """Construct the panel layout"""
@@ -40,6 +45,15 @@ class RightTab(PluginTab):
         self.layout.addStretch()
 
         self.setLayout(self.layout)
+
+    def generate_database(self, include_scenarios, dependencies, as_sdf):
+        if self.fold_chooser.use_table:
+            record = self.fold_chooser.folds_table.model.selected_record
+
+        # generate
+        QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
+        unfold_databases(record, include_scenarios, dependencies, as_sdf)
+        QtWidgets.QApplication.restoreOverrideCursor()
 
 
 class FoldChooserWidget(QtWidgets.QWidget):
@@ -118,14 +132,37 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         # convert the binary list to a list of indices that were selected
         include_scenarios = [i for i, state in enumerate(self.data_package_table.model.include) if state]
 
-        dependencies = {}
+        dependencies = []
         for dependency in self.data_package_table.model.data_package.descriptor['dependencies']:
+            dependencies.append(dependency['name'])
+        dependencies = self.relink_database(dependencies)
 
+        signals.generate_db.emit(include_scenarios, dependencies, self.sdf_check.isChecked())
 
+    def relink_database(self, depends: list) -> dict:
+        """Relink technosphere exchanges within the given Fold."""
 
+        options = [(depend, bw.databases.list) for depend in depends]
+        dialog = RelinkDialog.relink_scenario_link(options)
+        relinked = {}
+        relinking_results = []
+        if dialog.exec_() == RelinkDialog.Accepted:
+            for old, new in dialog.relink.items():
+                # Add the relinks
+                relinked[old] = new
+            for dep in depends:
+                # Add any remaining DBs with the same name
+                if dep not in relinked.keys():
+                    relinked[dep] = dep
+            return relinked
 
-        print('++ include', include_scenarios)
-        print('++ depends', dependencies)
+class RelinkDialog(DatabaseLinkingDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
 
+    @classmethod
+    def relink_scenario_link(cls, options: List[Tuple[str, List[str]]],
+                     parent=None) -> 'RelinkDialog':
+        label = "Choose the ScenarioLink databases."
+        return cls.construct_dialog(label, options, parent)
 
-        signals.import_state.emit(include_scenarios, self.sdf_check.isChecked())
