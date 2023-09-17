@@ -84,7 +84,7 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.radio_widget)
 
         # Folds table
-        self.table_label = QtWidgets.QLabel('Doubleclick to open a Fold dataset (If not present locally, it will be downloaded)')
+        self.table_label = QtWidgets.QLabel('Doubleclick to open a datapackage (if not present locally, it will be downloaded -- this may take a while).')
         self.layout.addWidget(self.table_label)
 
         self.folds_table = FoldsTable(self)
