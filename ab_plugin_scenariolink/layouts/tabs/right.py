@@ -6,6 +6,7 @@ from typing import List, Tuple
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
 from activity_browser.ui.widgets.dialog import DatabaseLinkingDialog
+from activity_browser.signals import signals as ab_signals
 
 from ...tables.tables import FoldsTable, DataPackageTable
 from ...signals import signals
@@ -53,6 +54,7 @@ class RightTab(PluginTab):
         # generate
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
         unfold_databases(record, include_scenarios, dependencies, as_sdf)
+        ab_signals.databases_changed.emit()
         QtWidgets.QApplication.restoreOverrideCursor()
 
 
