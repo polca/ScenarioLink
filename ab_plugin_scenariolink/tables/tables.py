@@ -78,7 +78,7 @@ class DataPackageTable(ABDataFrameView):
         """Connect signals to slots."""
         self.model.updated.connect(self.update_proxy_model)
         self.model.updated.connect(self.custom_view_sizing)
-        self.model.updated.connect(lambda: signals.record_ready.emit)
+        self.model.updated.connect(lambda: signals.record_ready.emit(True))
 
     def mousePressEvent(self, e):
         """

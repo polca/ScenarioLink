@@ -38,18 +38,17 @@ class RightTab(PluginTab):
 
         # Folds chooser
         self.layout.addWidget(self.fold_chooser)
-        self.layout.addWidget(horizontal_line())
 
         # Scenario Chooser
         self.layout.addWidget(self.scenario_chooser)
-        self.layout.addWidget(horizontal_line())
+        self.scenario_chooser.setVisible(False)
 
         self.layout.addStretch()
 
         self.setLayout(self.layout)
 
-    def record_selected(self):
-        print('RECORD SELECTED')
+    def record_selected(self, state):
+        self.scenario_chooser.setVisible(state)
 
     def generate_database(self, include_scenarios, dependencies, as_sdf):
         if self.fold_chooser.use_table:
@@ -67,6 +66,10 @@ class FoldChooserWidget(QtWidgets.QWidget):
         super(FoldChooserWidget, self).__init__()
 
         self.layout = QtWidgets.QVBoxLayout()
+
+        # label
+        self.label = QtWidgets.QLabel('Select the Fold you want to use')
+        self.layout.addWidget(self.label)
 
         # Radio buttons to choose where to get Fold from
         self.radio_default = QtWidgets.QRadioButton('Default Folds')
@@ -94,6 +97,7 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.custom.setVisible(False)
         self.layout.addWidget(self.custom)
 
+        self.layout.addWidget(horizontal_line())
         self.setLayout(self.layout)
 
         self.radio_custom.toggled.connect(self.radio_toggled)
@@ -104,12 +108,17 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.table_label.setVisible(not toggled)
 
         self.custom.setVisible(toggled)
+        signals.record_ready.emit(False)
 
 class ScenarioChooserWidget(QtWidgets.QWidget):
     def __init__(self):
         super(ScenarioChooserWidget, self).__init__()
 
         self.layout = QtWidgets.QVBoxLayout()
+
+        # Label
+        self.label = QtWidgets.QLabel('Choose the scenarios you want to install')
+        self.layout.addWidget(self.label)
 
         # Datapackage table
         self.data_package_table = DataPackageTable(self)
@@ -131,6 +140,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.import_b_widg)
         self.import_b.clicked.connect(self.import_state)
 
+        self.layout.addWidget(horizontal_line())
         self.setLayout(self.layout)
 
         signals.block_sdf.connect(self.manage_sdf_state)
@@ -144,6 +154,8 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         for dependency in self.data_package_table.model.data_package.descriptor['dependencies']:
             dependencies.append(dependency['name'])
         dependencies = self.relink_database(dependencies)
+        if not dependencies:
+            return
 
         signals.generate_db.emit(include_scenarios, dependencies, self.sdf_check.isChecked())
 
@@ -179,6 +191,6 @@ class RelinkDialog(DatabaseLinkingDialog):
     @classmethod
     def relink_scenario_link(cls, options: List[Tuple[str, List[str]]],
                      parent=None) -> 'RelinkDialog':
-        label = "Choose the ScenarioLink databases."
+        label = "Choose the ScenarioLink databases.\nBy clicking 'OK', you start the import."
         return cls.construct_dialog(label, options, parent)
 
