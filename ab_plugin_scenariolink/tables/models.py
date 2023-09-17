@@ -64,6 +64,11 @@ class DataPackageModel(PandasModel):
         self.data_package = None
         self.include = None
 
+        self._connect_signals()
+
+    def _connect_signals(self):
+        signals.get_datapackage_from_record.connect(self.get_datapackage_from_record)
+
     def sync(self) -> None:
         """
         Synchronize the DataPackage table with the currently loaded data package.
@@ -108,7 +113,7 @@ class DataPackageModel(PandasModel):
         self.last_include = self.include
         return pd.DataFrame(data)
 
-    def get_datapackage(self, dp_name: str) -> None:
+    def get_datapackage_from_record(self, dp_name: str) -> None:
         """
         Retrieve a datapackage from Zenodo or cache and synchronize the table.
 

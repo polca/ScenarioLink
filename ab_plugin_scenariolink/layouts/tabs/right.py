@@ -26,6 +26,7 @@ class RightTab(PluginTab):
 
     def _connect_signals(self):
         signals.generate_db.connect(self.generate_database)
+        signals.record_ready.connect(self.record_selected)
 
     def construct_layout(self) -> None:
         """Construct the panel layout"""
@@ -46,6 +47,9 @@ class RightTab(PluginTab):
         self.layout.addStretch()
 
         self.setLayout(self.layout)
+
+    def record_selected(self):
+        print('RECORD SELECTED')
 
     def generate_database(self, include_scenarios, dependencies, as_sdf):
         if self.fold_chooser.use_table:
