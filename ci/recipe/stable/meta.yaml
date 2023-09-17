@@ -13,13 +13,13 @@ build:
 
 requirements:
   build:
-    - python =3.9
+    - python=3.9
     - setuptools
     - conda-verify
-    - unfold
+    - unfold>=2023.09.17
     - datapackage
   run:
-    - activity-browser>=2.8
+    - activity-browser
 
 about:
   home: https://github.com/Pan6ora/activity-browser-plugin-template
