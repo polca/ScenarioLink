@@ -123,6 +123,7 @@ class DataPackageModel(PandasModel):
             dp_name (str): The name of the datapackage to retrieve.
         """
         dp = download_files_from_zenodo(dp_name)
+        self.include = None
         self.sync_with_package(dp)
 
     def get_datapackage_from_disk(self) -> None:
@@ -133,6 +134,7 @@ class DataPackageModel(PandasModel):
         )
         print('file selected from path:', path)
         dp = package_from_path(path)
+        self.include = None
         self.sync_with_package(dp)
 
     def sync_with_package(self, dp):
