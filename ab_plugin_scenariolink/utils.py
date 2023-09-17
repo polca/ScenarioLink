@@ -2,14 +2,44 @@ import requests
 import zipfile
 import os
 import tempfile
+from unfold import Unfold
 from datapackage import Package
 import appdirs
-from ab_plugin_scenariolink.signals import signals
 from PySide2.QtWidgets import QApplication
 from PySide2.QtCore import Qt
 
 
-def download_files_from_zenodo(record_id):
+def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superstructure: bool) -> None:
+    """
+    Unfold databases from a given filepath.
+
+    :param filepath: Path to the database file.
+    :type filepath: str
+    :param scenarios: List of scenarios to unfold.
+    :type scenarios: list
+    :param dependencies: Dictionary of dependencies.
+    :type dependencies: dict
+    :param superstructure: Whether to unfold the superstructure.
+    :type superstructure: bool
+
+    Does not return anything.
+    """
+
+    Unfold(filepath).unfold(
+        dependencies=dependencies,
+        scenarios=scenarios,
+        superstructure=superstructure,
+    ).unfold()
+
+def download_files_from_zenodo(record_id: str) -> [Package, None]:
+    """
+    Download datapackages from Zenodo.
+    Returns a datapackage object.
+
+    :param record_id: Zenodo record ID.
+    :type record_id: str
+    """
+
     # Define the API endpoint
     url = f"https://zenodo.org/api/records/{record_id}"
 
@@ -18,7 +48,7 @@ def download_files_from_zenodo(record_id):
 
     if response.status_code != 200:
         print(f"Failed to get data from Zenodo. Status code: {response.status_code}")
-        return
+        return None
 
     json_data = response.json()
 
@@ -60,6 +90,7 @@ def download_files_from_zenodo(record_id):
                         final_zip.write(os.path.join(root, file), file)
 
     QApplication.restoreOverrideCursor()
+
     return Package(os.path.join(folder_name, zip_filename))
 
 
