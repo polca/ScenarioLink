@@ -4,6 +4,7 @@ from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
 
 from ...tables.tables import FoldsTable, DataPackageTable
+from ...signals import signals
 
 class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
@@ -88,8 +89,43 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
     def __init__(self):
         super(ScenarioChooserWidget, self).__init__()
 
-        self.data_package_table = DataPackageTable(self)
-
         self.layout = QtWidgets.QVBoxLayout()
+
+        # Datapackage table
+        self.data_package_table = DataPackageTable(self)
         self.layout.addWidget(self.data_package_table)
+
+        # SDF checker
+        self.sdf_check = QtWidgets.QCheckBox('Produce Superstructure database')
+        self.sdf_check.setToolTip('TODO explain what SDF is here')
+        self.sdf_check.setChecked(False)
+        self.layout.addWidget(self.sdf_check)
+
+        # Import button
+        self.import_b = QtWidgets.QPushButton('Import')
+        self.import_layout = QtWidgets.QHBoxLayout()
+        self.import_layout.addWidget(self.import_b)
+        self.import_layout.addStretch()
+        self.import_b_widg = QtWidgets.QWidget()
+        self.import_b_widg.setLayout(self.import_layout)
+        self.layout.addWidget(self.import_b_widg)
+        self.import_b.clicked.connect(self.import_state)
+
         self.setLayout(self.layout)
+
+    def import_state(self):
+
+        # convert the binary list to a list of indices that were selected
+        include_scenarios = [i for i, state in enumerate(self.data_package_table.model.include) if state]
+
+        dependencies = {}
+        for dependency in self.data_package_table.model.data_package.descriptor['dependencies']:
+
+
+
+
+        print('++ include', include_scenarios)
+        print('++ depends', dependencies)
+
+
+        signals.import_state.emit(include_scenarios, self.sdf_check.isChecked())
