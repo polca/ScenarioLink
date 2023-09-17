@@ -34,8 +34,6 @@ def download_files_from_zenodo(record_id):
     if os.path.exists(os.path.join(folder_name, zip_filename)):
         return Package(os.path.join(folder_name, zip_filename))
 
-    signals.downloading_label.emit()
-
     QApplication.setOverrideCursor(Qt.WaitCursor)
     with zipfile.ZipFile(os.path.join(folder_name, zip_filename), 'w') as final_zip:
         for idx, file_info in enumerate(json_data['files']):
