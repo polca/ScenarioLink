@@ -17,7 +17,7 @@ requirements:
     - setuptools
     - conda-verify
     - unfold
-    - zenodo_get
+    - datapackage
   run:
     - activity-browser>=2.8
 
@@ -31,4 +31,5 @@ about:
     The [Activity Browser](https://github.com/LCA-ActivityBrowser/activity-browser)
     is a graphical user interface for the [brightway2](https://brightway.dev/)
     advanced life cycle assessment framework.
-    This plugin is a template to start creating new ones.
+    This plugin allows you to import scenario-based LCA databases 
+    through the use of `unfold` datapackages.
