@@ -1,3 +1,7 @@
+"""
+This module contains the tables used in the ScenarioLink plugin.
+"""
+
 from PySide2 import QtWidgets, QtCore
 from PySide2.QtCore import Slot
 

@@ -1,11 +1,18 @@
-import pandas as pd
+"""
+Models for the tables in the plugin.
+"""
+
 from urllib.error import HTTPError
+import pandas as pd
 
 from activity_browser.ui.tables.models import PandasModel
 
 from ..utils import download_files_from_zenodo
 
 class FoldsModel(PandasModel):
+    """
+    Model for the Folds table.
+    """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -18,11 +25,11 @@ class FoldsModel(PandasModel):
         try:
             # prevent fetching cached file
             # and specific that all columns should be of string type
-            df = pd.read_csv(url + "?nocache", header=0, sep=";", dtype=str)
+            dataframe = pd.read_csv(url + "?nocache", header=0, sep=";", dtype=str)
 
-            self._dataframe = df
-        except HTTPError as e:
-            print('++failed to import data', e)
+            self._dataframe = dataframe
+        except HTTPError as exception:
+            print('++failed to import data', exception)
 
         self.updated.emit()
 
@@ -32,19 +39,22 @@ class FoldsModel(PandasModel):
 
 
 class DataPackageModel(PandasModel):
+    """
+    Model for the DataPackage table.
+    """
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.data_package = None
         self.include = []
 
-    def sync(self):
+    def sync(self) -> None:
         if not self.data_package:
             return
-        dp = self.data_package
-        df = self.build_df_from_descriptor(dp.descriptor['scenarios'])
-        df = df.reindex(columns=['include', 'name', 'description'])
-        self._dataframe = df
+        datapackage = self.data_package
+        dataframe = self.build_df_from_descriptor(datapackage.descriptor['scenarios'])
+        dataframe = dataframe.reindex(columns=['include', 'name', 'description'])
+        self._dataframe = dataframe
         self.updated.emit()
 
     def build_df_from_descriptor(self, descr: list) -> pd.DataFrame:
@@ -60,7 +70,7 @@ class DataPackageModel(PandasModel):
                     data[key] = [value]
         return pd.DataFrame(data)
 
-    def get_datapackage(self, dp_name: str):
+    def get_datapackage(self, dp_name: str) -> None:
         """Retrieve datapackage (from zenodo or cache) and sync table."""
         dp = download_files_from_zenodo(dp_name)
         self.data_package = dp

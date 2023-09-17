@@ -1,7 +1,11 @@
-import requests
+"""
+Contains utility functions for the ScenarioLink plugin.
+"""
+
 import zipfile
 import os
 import tempfile
+import requests
 from unfold import Unfold
 from datapackage import Package
 import appdirs
@@ -31,6 +35,7 @@ def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superst
         superstructure=superstructure,
     ).unfold()
 
+
 def download_files_from_zenodo(record_id: str) -> [Package, None]:
     """
     Download datapackages from Zenodo.
@@ -44,7 +49,7 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
     url = f"https://zenodo.org/api/records/{record_id}"
 
     # Send a GET request to fetch the raw JSON content
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
 
     if response.status_code != 200:
         print(f"Failed to get data from Zenodo. Status code: {response.status_code}")
@@ -70,15 +75,15 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
             print(f"Downloading file {idx + 1}/{len(json_data['files'])}")
 
             file_url = file_info['links']['self']
-            r = requests.get(file_url)
+            response = requests.get(file_url, timeout=10)
 
             # Create a temporary directory to hold the downloaded ZIP files and their extracted contents
             with tempfile.TemporaryDirectory() as tmpdirname:
                 downloaded_zip_path = os.path.join(tmpdirname, "downloaded.zip")
 
                 # Save the downloaded ZIP file
-                with open(downloaded_zip_path, 'wb') as f:
-                    f.write(r.content)
+                with open(downloaded_zip_path, 'wb') as file:
+                    file.write(response.content)
 
                 # Extract the downloaded ZIP file
                 with zipfile.ZipFile(downloaded_zip_path, 'r') as downloaded_zip:
@@ -92,6 +97,3 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
     QApplication.restoreOverrideCursor()
 
     return Package(os.path.join(folder_name, zip_filename))
-
-
-
