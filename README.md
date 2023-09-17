@@ -47,9 +47,12 @@ The Activity Browser builds upon the [Brightway2](https://brightway.dev) LCA fra
 
 4. If the selected is not present in the local cache, it will be downloaded from the remote repository.
 5. Once the download is complete, a second table presents the scenarios contained in the datapackage.
+
+    ![Scenario Table](assets/scenario_table.png)
+
 6. Select the desired scenario(s) by checking the corresponding checkboxes.
 7. Choose whether to merge the selected scenarios into a single database (superstructure database) or reproduce them individually.
-8. Click `Reproduce` to start the process.
+8. Click `Import` to start the process.
 9. The plugin will ask you to select the databases in your project that will be used as source databases.
 10. The plugin will then reproduce the selected scenario(s) and add them to your project.
 
