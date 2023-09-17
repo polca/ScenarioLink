@@ -99,7 +99,12 @@ class DataPackageTable(ABDataFrameView):
                     if truthy:
                         include_count += 1
                 if include_count == 0:
+                    # If user tries to disable last remaining scenario, block them
                     return
+                elif include_count == 1:
+                    signals.block_sdf.emit(True)
+                else:
+                    signals.block_sdf.emit(False)
 
                 self.model.include = new_includes
                 self.model.sync()

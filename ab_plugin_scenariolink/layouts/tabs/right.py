@@ -129,6 +129,8 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
 
         self.setLayout(self.layout)
 
+        signals.block_sdf.connect(self.manage_sdf_state)
+
     def import_state(self):
 
         # convert the binary list to a list of indices that were selected
@@ -147,7 +149,6 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         options = [(depend, bw.databases.list) for depend in depends]
         dialog = RelinkDialog.relink_scenario_link(options)
         relinked = {}
-        relinking_results = []
         if dialog.exec_() == RelinkDialog.Accepted:
             for old, new in dialog.relink.items():
                 # Add the relinks
@@ -157,6 +158,15 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
                 if dep not in relinked.keys():
                     relinked[dep] = dep
             return relinked
+
+    def manage_sdf_state(self, state: bool) -> None:
+        if state:
+            # block the SDF state
+            self.sdf_check.setChecked(False)
+            self.sdf_check.setEnabled(False)
+        else:
+            self.sdf_check.setEnabled(True)
+
 
 class RelinkDialog(DatabaseLinkingDialog):
     def __init__(self, parent=None):

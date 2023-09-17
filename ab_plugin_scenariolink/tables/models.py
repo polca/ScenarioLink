@@ -7,6 +7,7 @@ import pandas as pd
 
 from activity_browser.ui.tables.models import PandasModel
 from ..utils import download_files_from_zenodo
+from ..signals import signals
 
 
 class FoldsModel(PandasModel):
@@ -73,9 +74,6 @@ class DataPackageModel(PandasModel):
             return
 
         datapackage = self.data_package
-
-        # TODO emit signal to disable SDF and disable remaining checkbox
-
         dataframe = self.build_df_from_descriptor(datapackage.descriptor['scenarios'])
         dataframe = dataframe.reindex(columns=['include', 'name', 'description'])
 
@@ -94,6 +92,9 @@ class DataPackageModel(PandasModel):
         """
         if not self.include:
             self.include = [True for _ in descr]
+            # if there is only 1 scenario, block SDF enabling
+            if len(self.include) <= 1:
+                signals.block_sdf.emit(True)
 
         data = {'include': self.include}
 
