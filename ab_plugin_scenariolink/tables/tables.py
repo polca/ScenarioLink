@@ -92,21 +92,14 @@ class DataPackageTable(ABDataFrameView):
                 # Flip the value for the 'include' checkbox
                 new_value = not bool(proxy.data())
 
-                new_includes = self.model.include
+                new_includes = self.model.include[:]
                 new_includes[proxy.row()] = new_value
-                print('++ NI', new_includes)
-
                 include_count = 0
                 for truthy in new_includes:
                     if truthy:
                         include_count += 1
-                if include_count == 1:
-                    # block if last checkbox is selected
-                    only_row = [i for i, selected in enumerate(new_includes) if selected][0]
-                    print('++ ', only_row, proxy.row())
-                    if only_row == proxy.row():
-                        return
-
+                if include_count == 0:
+                    return
 
                 self.model.include = new_includes
                 self.model.sync()
