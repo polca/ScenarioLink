@@ -33,15 +33,25 @@ The Activity Browser builds upon the [Brightway2](https://brightway.dev) LCA fra
 
 ### Reproduce a scenario-based database
 
-1. After activating the plugin, select the `ScenarioLink` tab.
-2. Select (double-click) the desired datapackage from the table.
-3. If the selected is not present in the local cache, it will be downloaded from the remote repository.
-4. Once the download is complete, a second table presents the scenarios contained in the datapackage.
-5. Select the desired scenario(s) by checking the corresponding checkboxes.
-6. Choose whether to merge the selected scenarios into a single database (superstructure database) or reproduce them individually.
-7. Click `Reproduce` to start the process.
-8. The plugin will ask you to select the databases in your project that will be used as source databases.
-9. The plugin will then reproduce the selected scenario(s) and add them to your project.
+1. Activate the plugin by selecting it from the plugin list.
+
+    ![Plugin List](assets/plugin_list.png)
+
+2. After activating the plugin, select the `ScenarioLink` tab.
+
+    ![ScenarioLink Tab](assets/scenariolink_tab.png)
+
+3. Select (double-click) the desired datapackage from the table.
+
+    ![Datapackage Table](assets/datapackage_table.png)
+
+4. If the selected is not present in the local cache, it will be downloaded from the remote repository.
+5. Once the download is complete, a second table presents the scenarios contained in the datapackage.
+6. Select the desired scenario(s) by checking the corresponding checkboxes.
+7. Choose whether to merge the selected scenarios into a single database (superstructure database) or reproduce them individually.
+8. Click `Reproduce` to start the process.
+9. The plugin will ask you to select the databases in your project that will be used as source databases.
+10. The plugin will then reproduce the selected scenario(s) and add them to your project.
 
 ## Contributing
 
