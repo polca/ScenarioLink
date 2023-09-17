@@ -7,6 +7,7 @@ import pandas as pd
 
 from activity_browser.ui.tables.models import PandasModel
 from ..utils import download_files_from_zenodo
+from ..signals import signals
 
 
 class FoldsModel(PandasModel):
@@ -61,7 +62,7 @@ class DataPackageModel(PandasModel):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.data_package = None
-        self.include = []
+        self.include = None
 
     def sync(self) -> None:
         """
@@ -75,8 +76,6 @@ class DataPackageModel(PandasModel):
         datapackage = self.data_package
         dataframe = self.build_df_from_descriptor(datapackage.descriptor['scenarios'])
         dataframe = dataframe.reindex(columns=['include', 'name', 'description'])
-
-        #TODO write here a check if only 1 scenario is selected, if so, emit signal so we disable SDF option
 
         self._dataframe = dataframe
         self.updated.emit()
@@ -93,6 +92,9 @@ class DataPackageModel(PandasModel):
         """
         if not self.include:
             self.include = [True for _ in descr]
+            # if there is only 1 scenario, block SDF enabling
+            if len(self.include) <= 1:
+                signals.block_sdf.emit(True)
 
         data = {'include': self.include}
 
@@ -103,6 +105,7 @@ class DataPackageModel(PandasModel):
                 else:
                     data[key] = [value]
 
+        self.last_include = self.include
         return pd.DataFrame(data)
 
     def get_datapackage(self, dp_name: str) -> None:
