@@ -47,7 +47,7 @@ class DataPackageModel(PandasModel):
         self._dataframe = df
         self.updated.emit()
 
-    def build_df_from_descriptor(self, descr: list) -> pd.Dataframe:
+    def build_df_from_descriptor(self, descr: list) -> pd.DataFrame:
         """Build dataframe from descriptor data."""
         if not self.include:
             self.include = [True for _ in descr]
