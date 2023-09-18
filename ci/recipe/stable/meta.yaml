@@ -18,7 +18,6 @@ requirements:
     - conda-verify
     - unfold
     - datapackage
-    - pyside2
     - pandas
   run:
     - activity-browser
