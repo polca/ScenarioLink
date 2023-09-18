@@ -135,10 +135,12 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.sdf_check = QtWidgets.QCheckBox('Produce Superstructure database')
         self.sdf_check.setToolTip('TODO explain what SDF is here')
         self.sdf_check.setChecked(False)
+        self.sdf_check.setEnabled(False)
         self.layout.addWidget(self.sdf_check)
 
         # Import button
         self.import_b = QtWidgets.QPushButton('Import')
+        self.import_b.setEnabled(False)
         self.import_layout = QtWidgets.QHBoxLayout()
         self.import_layout.addWidget(self.import_b)
         self.import_layout.addStretch()
@@ -150,7 +152,8 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.layout.addWidget(horizontal_line())
         self.setLayout(self.layout)
 
-        signals.block_sdf.connect(self.manage_sdf_state)
+        signals.no_or_1_scenario_selected.connect(self.manage_sdf_state)
+        signals.no_scenario_selected.connect(self.manage_import_button_state)
 
     def import_state(self):
 
@@ -186,9 +189,10 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         if state:
             # block the SDF state
             self.sdf_check.setChecked(False)
-            self.sdf_check.setEnabled(False)
-        else:
-            self.sdf_check.setEnabled(True)
+        self.sdf_check.setEnabled(not state)
+
+    def manage_import_button_state(self, state: bool) -> None:
+        self.import_b.setEnabled(not state)
 
 
 class RelinkDialog(DatabaseLinkingDialog):

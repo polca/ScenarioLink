@@ -106,8 +106,16 @@ class DataPackageTable(ABDataFrameView):
         menu.exec_(event.globalPos())
 
     def un_check_all(self, state):
+        """Check or uncheck all scenario checkboxes.
+
+        State True represents check all scenarios
+        State False represents uncheck all scenarios"""
         self.model.include = [state for _ in self.model.include]
         self.model.sync()
+
+        # manage the state of the import button and SDF checkbox
+        signals.no_or_1_scenario_selected.emit(not state)
+        signals.no_scenario_selected.emit(not state)
 
     def mousePressEvent(self, e):
         """
@@ -128,12 +136,13 @@ class DataPackageTable(ABDataFrameView):
                     if truthy:
                         include_count += 1
                 if include_count == 0:
-                    # If user tries to disable last remaining scenario, block them
-                    return
+                    signals.no_scenario_selected.emit(True)
                 elif include_count == 1:
-                    signals.block_sdf.emit(True)
+                    signals.no_or_1_scenario_selected.emit(True)
+                    signals.no_scenario_selected.emit(False)
                 else:
-                    signals.block_sdf.emit(False)
+                    signals.no_or_1_scenario_selected.emit(False)
+                    signals.no_scenario_selected.emit(False)
 
                 self.model.include = new_includes
                 self.model.sync()

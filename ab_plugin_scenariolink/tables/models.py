@@ -101,7 +101,7 @@ class DataPackageModel(PandasModel):
             self.include = [False for _ in descr]
             # if there is only 1 scenario, block SDF enabling
             if len(self.include) <= 1:
-                signals.block_sdf.emit(True)
+                signals.no_or_1_scenario_selected.emit(True)
 
         data = {'include': self.include}
 
