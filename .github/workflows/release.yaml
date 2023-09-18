@@ -20,7 +20,7 @@ jobs:
       - name: Set up conda-build environment
         uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: 3.10
+          python-version: 3.9
           activate-environment: build
           environment-file: ci/conda-envs/build.yml
       - name: Build activity-browser stable
