@@ -68,13 +68,13 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.layout = QtWidgets.QVBoxLayout()
 
         # label
-        self.label = QtWidgets.QLabel('Select the Fold you want to use')
+        self.label = QtWidgets.QLabel('Select the datapackage you want to use')
         self.layout.addWidget(self.label)
 
         # Radio buttons to choose where to get Fold from
-        self.radio_default = QtWidgets.QRadioButton('Default Folds')
+        self.radio_default = QtWidgets.QRadioButton('Online datapackages')
         self.radio_default.setChecked(True)
-        self.radio_custom = QtWidgets.QRadioButton('Custom Fold import')
+        self.radio_custom = QtWidgets.QRadioButton('Local datapackages')
         self.radio_layout = QtWidgets.QHBoxLayout()
         self.radio_layout.addWidget(self.radio_default)
         self.radio_layout.addWidget(self.radio_custom)
@@ -89,7 +89,7 @@ class FoldChooserWidget(QtWidgets.QWidget):
 
         self.folds_table = FoldsTable(self)
         self.use_table = True  # bool to see if we need to read this table or instead read the local import
-        self.folds_table.setToolTip('Doubleclick to open a Fold dataset')
+        self.folds_table.setToolTip('Doubleclick to open a datapackage')
         self.layout.addWidget(self.folds_table)
 
         # Fold custom importer

@@ -129,7 +129,7 @@ class DataPackageModel(PandasModel):
     def get_datapackage_from_disk(self) -> None:
         """"Start a dialog to retrieve a datapackage from disk."""
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            caption="Select Fold zip file",
+            caption="Select datapackage zip file",
             filter='*.zip'
         )
         print('file selected from path:', path)
