@@ -91,6 +91,24 @@ class DataPackageTable(ABDataFrameView):
     def update_col_width(self):
         self.resizeColumnsToContents()
 
+    def contextMenuEvent(self, event) -> None:
+        if self.indexAt(event.pos()).row() == -1:
+            return
+
+        menu = QtWidgets.QMenu(self)
+        if all(self.model.include):
+            menu.addAction("Uncheck all", lambda: self.un_check_all(False))
+        elif not all(self.model.include):
+            menu.addAction("Check all", lambda: self.un_check_all(True))
+        if any(self.model.include) and not all(self.model.include):
+            # this includes check all
+            menu.addAction("Uncheck all", lambda: self.un_check_all(False))
+        menu.exec_(event.globalPos())
+
+    def un_check_all(self, state):
+        self.model.include = [state for _ in self.model.include]
+        self.model.sync()
+
     def mousePressEvent(self, e):
         """
         Handle mouse click events.
