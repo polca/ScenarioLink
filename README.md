@@ -45,7 +45,7 @@ The Activity Browser builds upon the [Brightway2](https://brightway.dev) LCA fra
 
     ![Datapackage Table](assets/datapackage_table.png)
 
-4. If the selected is not present in the local cache, it will be downloaded from the remote repository.
+4. If the datapackage selected is not present in the local cache, it will be downloaded from the remote repository.
 5. Once the download is complete, a second table presents the scenarios contained in the datapackage.
 
     ![Scenario Table](assets/scenario_table.png)
