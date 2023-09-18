@@ -4,7 +4,7 @@ package:
 
 source:
   git_rev: main
-  git_url: https://github.com/Pan6ora/activity-browser-plugin-template.git
+  git_url: https://github.com/polca/ScenarioLink.git
 
 build:
   noarch: python
