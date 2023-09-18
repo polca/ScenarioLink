@@ -26,6 +26,7 @@ class FoldsTable(ABDataFrameView):
         # Hide the vertical header and set the selection mode
         self.verticalHeader().setVisible(False)
         self.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
 
         # Set the size policy for the table
         self.setSizePolicy(QtWidgets.QSizePolicy(
@@ -36,12 +37,17 @@ class FoldsTable(ABDataFrameView):
         self.model = FoldsModel(parent=self)
         self._connect_signals()
         self.model.sync()
+        self.setColumnHidden(6, True)  # hide the record column
 
     def _connect_signals(self):
         """Connect signals to slots."""
         self.doubleClicked.connect(self.row_selected)
         self.model.updated.connect(self.update_proxy_model)
         self.model.updated.connect(self.custom_view_sizing)
+        self.model.updated.connect(self.update_col_width)
+
+    def update_col_width(self):
+        self.resizeColumnsToContents()
 
     @Slot(QtCore.QModelIndex, name="row_selected")
     def row_selected(self, index) -> None:
@@ -65,6 +71,7 @@ class DataPackageTable(ABDataFrameView):
         # Hide the vertical header and set the selection mode
         self.verticalHeader().setVisible(False)
         self.setSelectionMode(QtWidgets.QTableView.SingleSelection)
+        self.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
 
         # Specify the column index for the 'include' checkbox
         self.include_col = 0
@@ -79,6 +86,10 @@ class DataPackageTable(ABDataFrameView):
         self.model.updated.connect(self.update_proxy_model)
         self.model.updated.connect(self.custom_view_sizing)
         self.model.updated.connect(lambda: signals.record_ready.emit(True))
+        self.model.updated.connect(self.update_col_width)
+
+    def update_col_width(self):
+        self.resizeColumnsToContents()
 
     def mousePressEvent(self, e):
         """
