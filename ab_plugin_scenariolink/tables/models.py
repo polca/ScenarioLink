@@ -98,7 +98,7 @@ class DataPackageModel(PandasModel):
             pd.DataFrame: A DataFrame containing the scenario details.
         """
         if not self.include:
-            self.include = [True for _ in descr]
+            self.include = [False for _ in descr]
             # if there is only 1 scenario, block SDF enabling
             if len(self.include) <= 1:
                 signals.block_sdf.emit(True)
