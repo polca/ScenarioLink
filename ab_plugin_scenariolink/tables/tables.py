@@ -34,6 +34,10 @@ class FoldsTable(ABDataFrameView):
             QtWidgets.QSizePolicy.Maximum
         ))
 
+        # Specify the column index for the 'cached column' checkbox
+        self.cached_col = 7
+        self.setItemDelegateForColumn(self.cached_col, CheckboxDelegate(self))
+
         self.model = FoldsModel(parent=self)
         self._connect_signals()
         self.model.sync()

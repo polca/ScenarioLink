@@ -15,7 +15,7 @@ from PySide2.QtCore import Qt
 
 
 def unfold_databases(
-        filepath: str,
+        filename: str,
         scenarios: list,
         dependencies: dict,
         superstructure: bool,
@@ -24,7 +24,7 @@ def unfold_databases(
     Unfold databases based on a given filepath and scenarios list.
 
     Parameters:
-        filepath (str): The path to the database file.
+        filename (str): The path to the database file.
         scenarios (list): The list of scenarios to unfold.
         dependencies (dict): A dictionary containing dependencies.
         superstructure (bool): Flag to indicate if a superstructure should be unfolded.
@@ -38,8 +38,8 @@ def unfold_databases(
     if not os.path.exists(cache_folder):
         os.makedirs(cache_folder)
 
-    filepath = filepath + '.zip'
-    filepath = os.path.join(cache_folder, os.path.basename(filepath))
+    filename = filename + '.zip'
+    filepath = os.path.join(cache_folder, os.path.basename(filename))
 
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File {filepath} does not exist.")
@@ -78,7 +78,7 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
     zip_filename = f"{record_id}.zip"
 
     # Check if the file already exists; if so, return the Package
-    if os.path.exists(os.path.join(folder_name, zip_filename)):
+    if record_cached(record_id):
         print(f"File {zip_filename} already exists in cache.")
         return Package(os.path.join(folder_name, zip_filename))
 
@@ -138,3 +138,18 @@ def package_from_path(path: str) -> [Package, None]:
         print("Error, file selected is not a .zip file.")
         return
     return Package(path)
+
+def record_cached(record: str) -> bool:
+    """Return if record is cached."""
+    folder_name = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+
+    zip_filename = record + '.zip'
+    if os.path.exists(os.path.join(folder_name, zip_filename)):
+        return True
+    else:
+        return False
+
+
+

@@ -178,7 +178,8 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
             return
 
         sdf_db = self.sdf_name_field.text()
-        print('++SDF TEXT', sdf_db)
+        if sdf_db == '':
+            sdf_db = None
         signals.generate_db.emit(
             include_scenarios,  # List of scenario indices to include
             dependencies,  # dict of dependency names (translated between datapackage and current bw project

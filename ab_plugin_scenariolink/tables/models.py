@@ -7,7 +7,7 @@ from urllib.error import HTTPError
 import pandas as pd
 
 from activity_browser.ui.tables.models import PandasModel
-from ..utils import download_files_from_zenodo, package_from_path
+from ..utils import download_files_from_zenodo, package_from_path, record_cached
 from ..signals import signals
 
 
@@ -38,6 +38,12 @@ class FoldsModel(PandasModel):
             # Prevent fetching a cached file
             # Specify that all columns should be of string type
             dataframe = pd.read_csv(url + "?nocache", header=0, sep=";", dtype=str)
+
+            cached = []
+            for idx, row in dataframe.iterrows():
+                record_id = row.values.tolist()[-1]
+                cached.append(record_cached(record_id))
+            dataframe['Downloaded'] = cached
 
             self._dataframe = dataframe
         except HTTPError as exception:
