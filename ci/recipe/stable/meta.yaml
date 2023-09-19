@@ -13,7 +13,7 @@ build:
 
 requirements:
   build:
-    - python=3.9
+    - python
     - setuptools
     - conda-verify
     - unfold
@@ -21,6 +21,9 @@ requirements:
     - pandas
   run:
     - activity-browser
+    - unfold
+    - datapackage
+    - pandas
 
 about:
   home: https://github.com/polca/ScenarioLink
