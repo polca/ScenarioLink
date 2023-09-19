@@ -23,6 +23,7 @@ class FoldsModel(PandasModel):
         """Initialize the FoldsModel."""
         super().__init__(parent=parent)
         self.selected_record = None
+        self.record_col = 6
 
     def sync(self):
         """
@@ -43,7 +44,7 @@ class FoldsModel(PandasModel):
             for idx, row in dataframe.iterrows():
                 record_id = row.values.tolist()[-1]
                 cached.append(record_cached(record_id))
-            dataframe['Downloaded'] = cached
+            dataframe['downloaded'] = cached
 
             self._dataframe = dataframe
         except HTTPError as exception:
@@ -53,7 +54,7 @@ class FoldsModel(PandasModel):
 
     def get_record(self, idx):
         """Retrieve a record from a selected row in the DataFrame."""
-        record = self._dataframe.iat[idx.row(), -1]
+        record = self._dataframe.iat[idx.row(), self.record_col]
         self.selected_record = record
         return record
 

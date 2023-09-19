@@ -146,10 +146,11 @@ def record_cached(record: str) -> bool:
         os.makedirs(folder_name)
 
     zip_filename = record + '.zip'
-    if os.path.exists(os.path.join(folder_name, zip_filename)):
-        return True
-    else:
-        return False
+    return os.path.exists(os.path.join(folder_name, zip_filename))
+    # if os.path.exists(os.path.join(folder_name, zip_filename)):
+    #     return True
+    # else:
+    #     return False
 
 
 
