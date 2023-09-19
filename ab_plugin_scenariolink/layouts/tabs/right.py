@@ -143,7 +143,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.sdf_layout.addWidget(self.sdf_name_field)
         self.sdf_layout.addStretch()
         self.sdf_widget = QtWidgets.QWidget()
-        self.sdf_widget.setToolTip('Instead of writing mulitple databases per scenario,\n'
+        self.sdf_widget.setToolTip('Instead of writing multiple databases per scenario,\n'
                                    'write one database and a scenario difference file')
         self.sdf_widget.setLayout(self.sdf_layout)
         self.layout.addWidget(self.sdf_widget)
