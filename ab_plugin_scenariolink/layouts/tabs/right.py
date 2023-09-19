@@ -50,13 +50,13 @@ class RightTab(PluginTab):
     def record_selected(self, state):
         self.scenario_chooser.setVisible(state)
 
-    def generate_database(self, include_scenarios, dependencies, as_sdf):
+    def generate_database(self, include_scenarios, dependencies, as_superstructure, superstructure_db_name):
         if self.fold_chooser.use_table:
             record = self.fold_chooser.folds_table.model.selected_record
 
         # generate
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
-        unfold_databases(record, include_scenarios, dependencies, as_sdf)
+        unfold_databases(record, include_scenarios, dependencies, as_superstructure, superstructure_db_name)
         ab_signals.databases_changed.emit()
         QtWidgets.QApplication.restoreOverrideCursor()
 
@@ -133,10 +133,20 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
 
         # SDF checker
         self.sdf_check = QtWidgets.QCheckBox('Produce Superstructure database')
-        self.sdf_check.setToolTip('TODO explain what SDF is here')
         self.sdf_check.setChecked(False)
         self.sdf_check.setEnabled(False)
-        self.layout.addWidget(self.sdf_check)
+        self.sdf_name_field = QtWidgets.QLineEdit()
+        self.sdf_name_field.setPlaceholderText('Superstructure database name (optional)')
+        self.sdf_name_field.setEnabled(False)
+        self.sdf_layout = QtWidgets.QHBoxLayout()
+        self.sdf_layout.addWidget(self.sdf_check)
+        self.sdf_layout.addWidget(self.sdf_name_field)
+        self.sdf_layout.addStretch()
+        self.sdf_widget = QtWidgets.QWidget()
+        self.sdf_widget.setToolTip('Instead of writing mulitple databases per scenario,\n'
+                                   'write one database and a scenario difference file')
+        self.sdf_widget.setLayout(self.sdf_layout)
+        self.layout.addWidget(self.sdf_widget)
 
         # Import button
         self.import_b = QtWidgets.QPushButton('Import')
@@ -167,11 +177,17 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         if not dependencies:
             return
 
-        signals.generate_db.emit(include_scenarios, dependencies, self.sdf_check.isChecked())
+        sdf_db = self.sdf_name_field.text()
+        print('++SDF TEXT', sdf_db)
+        signals.generate_db.emit(
+            include_scenarios,  # List of scenario indices to include
+            dependencies,  # dict of dependency names (translated between datapackage and current bw project
+            self.sdf_check.isChecked(),  # whether to make this into superstructure format
+            sdf_db  # superstructure database name (str or None)
+        )
 
     def relink_database(self, depends: list) -> dict:
         """Relink technosphere exchanges within the given Fold."""
-
         options = [(depend, bw.databases.list) for depend in depends]
         dialog = RelinkDialog.relink_scenario_link(options)
         relinked = {}
@@ -186,12 +202,15 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
             return relinked
 
     def manage_sdf_state(self, state: bool) -> None:
+        """Change SDF UI elements depending on whether >1 scenarios are selected."""
         if state:
             # block the SDF state
             self.sdf_check.setChecked(False)
         self.sdf_check.setEnabled(not state)
+        self.sdf_name_field.setEnabled(not state)
 
     def manage_import_button_state(self, state: bool) -> None:
+        """Change import button UI elements depending on whether >=1 scenarios are selected."""
         self.import_b.setEnabled(not state)
 
 
