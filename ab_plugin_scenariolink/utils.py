@@ -14,7 +14,12 @@ from PySide2.QtWidgets import QApplication
 from PySide2.QtCore import Qt
 
 
-def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superstructure: bool) -> None:
+def unfold_databases(
+        filepath: str,
+        scenarios: list,
+        dependencies: dict,
+        superstructure: bool,
+        superstructure_db_name: str) -> None:
     """
     Unfold databases based on a given filepath and scenarios list.
 
@@ -23,6 +28,7 @@ def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superst
         scenarios (list): The list of scenarios to unfold.
         dependencies (dict): A dictionary containing dependencies.
         superstructure (bool): Flag to indicate if a superstructure should be unfolded.
+        superstructure_db_name
 
     Returns:
         None: This function performs the unfolding operation but does not return anything.
@@ -42,6 +48,7 @@ def unfold_databases(filepath: str, scenarios: list, dependencies: dict, superst
         dependencies=dependencies,
         scenarios=scenarios,
         superstructure=superstructure,
+        name=superstructure_db_name
     )
 
 
