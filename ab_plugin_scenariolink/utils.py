@@ -7,6 +7,7 @@ import zipfile
 import os
 import tempfile
 import requests
+#from .depends.unfold_sl import Unfold_SL as Unfold
 from unfold import Unfold
 from datapackage import Package
 import appdirs
