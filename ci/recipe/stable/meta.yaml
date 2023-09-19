@@ -4,7 +4,7 @@ package:
 
 source:
   git_rev: main
-  git_url: https://github.com/Pan6ora/activity-browser-plugin-template.git
+  git_url: https://github.com/polca/ScenarioLink.git
 
 build:
   noarch: python
@@ -16,17 +16,18 @@ requirements:
     - python=3.9
     - setuptools
     - conda-verify
-    - unfold>=2023.09.17
+    - unfold
     - datapackage
+    - pandas
   run:
     - activity-browser
 
 about:
-  home: https://github.com/Pan6ora/activity-browser-plugin-template
+  home: https://github.com/polca/ScenarioLink
   license: LGPL3+
   license_family: LGPL
   license_file: LICENSE.txt
-  summary: An empty plugin to start from
+  summary: Deploy `unfold` datapackages in Activity Browser
   description: |
     The [Activity Browser](https://github.com/LCA-ActivityBrowser/activity-browser)
     is a graphical user interface for the [brightway2](https://brightway.dev/)
