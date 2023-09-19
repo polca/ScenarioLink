@@ -10,6 +10,11 @@ import requests
 from unfold import Unfold
 from datapackage import Package
 import appdirs
+import pandas as pd
+import io
+from importlib.metadata import version, PackageNotFoundError
+from typing import Tuple
+
 from PySide2.QtWidgets import QApplication
 from PySide2.QtCore import Qt
 
@@ -147,10 +152,39 @@ def record_cached(record: str) -> bool:
 
     zip_filename = record + '.zip'
     return os.path.exists(os.path.join(folder_name, zip_filename))
-    # if os.path.exists(os.path.join(folder_name, zip_filename)):
-    #     return True
-    # else:
-    #     return False
 
+class UpdateManager():
 
+    @classmethod
+    def get_versions(cls) -> Tuple[str, str, bool]:
+        """Get the version of this plugin and the most recent version.
 
+        Return (current, latest, newer)
+        newer is a bool which is true if there is a newer version
+        """
+        current = cls._current_version(cls)
+        latest = cls._fetch_latest(cls)
+
+        for c, l in zip(current.split('.'), latest.split('.')):
+            if int(l) > int(c):
+                return (True, current, latest)
+        return (False, current, latest)
+
+    def _fetch_latest(self) -> str:
+        """Fetch the latest version number from conda channel."""
+        try:
+            package_url = 'https://anaconda.org/romainsacchi/ab-plugin-scenariolink/labels'
+            page = requests.get(package_url)  # retrieve the page from the URL
+            df = pd.read_html(io.StringIO(page.text))[0]  # read the version table from the HTML
+            latest = df.iloc[0, 1]
+        except:  # TODO log error properly and handle it properly
+            latest = '0.0.0'
+        return latest
+
+    def _current_version(self) -> str:
+        """Version of ScenarioLink running now."""
+        try:
+            version_ = version(__package__)
+        except PackageNotFoundError:
+            version_ = "0.0.0"
+        return version_

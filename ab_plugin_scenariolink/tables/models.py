@@ -3,7 +3,7 @@ This module contains the models for the tables used in the ScenarioLink plugin.
 """
 from PySide2 import QtWidgets
 
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 import pandas as pd
 
 from activity_browser.ui.tables.models import PandasModel
@@ -47,7 +47,7 @@ class FoldsModel(PandasModel):
             dataframe['downloaded'] = cached
 
             self._dataframe = dataframe
-        except HTTPError as exception:
+        except (HTTPError, URLError) as exception:
             print('++Failed to import data:', exception)
 
         self.updated.emit()

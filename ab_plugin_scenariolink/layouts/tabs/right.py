@@ -10,7 +10,7 @@ from activity_browser.signals import signals as ab_signals
 
 from ...tables.tables import FoldsTable, DataPackageTable
 from ...signals import signals
-from ...utils import unfold_databases
+from ...utils import unfold_databases, UpdateManager
 
 class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
@@ -21,7 +21,10 @@ class RightTab(PluginTab):
         self.fold_chooser = FoldChooserWidget()
         self.scenario_chooser = ScenarioChooserWidget()
 
+        self.version_label = QtWidgets.QLabel('')
+
         self.construct_layout()
+        self.version_check()
         self._connect_signals()
 
     def _connect_signals(self):
@@ -45,6 +48,8 @@ class RightTab(PluginTab):
 
         self.layout.addStretch()
 
+        self.layout.addWidget(self.version_label)
+
         self.setLayout(self.layout)
 
     def record_selected(self, state):
@@ -59,6 +64,13 @@ class RightTab(PluginTab):
         unfold_databases(record, include_scenarios, dependencies, as_superstructure, superstructure_db_name)
         ab_signals.databases_changed.emit()
         QtWidgets.QApplication.restoreOverrideCursor()
+
+    def version_check(self) -> None:
+        newer, current, latest = UpdateManager.get_versions()
+        if newer:
+            label = 'A newer version of ScenarioLink is available (your version: {}, the newest version: {}'\
+                .format(current, latest)
+            self.version_label.setText(label)
 
 
 class FoldChooserWidget(QtWidgets.QWidget):
