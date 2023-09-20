@@ -38,18 +38,22 @@ def unfold_databases(
     if not os.path.exists(cache_folder):
         os.makedirs(cache_folder)
 
-    filename = filename + '.zip'
+    filename = f"{filename}.zip"
     filepath = os.path.join(cache_folder, os.path.basename(filename))
 
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File {filepath} does not exist.")
 
-    Unfold(filepath).unfold(
-        dependencies=dependencies,
-        scenarios=scenarios,
-        superstructure=superstructure,
-        name=superstructure_db_name
-    )
+    try:
+        Unfold(filepath).unfold(
+            dependencies=dependencies,
+            scenarios=scenarios,
+            superstructure=superstructure,
+            name=superstructure_db_name
+        )
+    except Exception as e:
+        print(f"Failed to unfold database: {e}")
+        return
 
 
 def download_files_from_zenodo(record_id: str) -> [Package, None]:

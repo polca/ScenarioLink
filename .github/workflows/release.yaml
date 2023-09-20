@@ -12,17 +12,43 @@ jobs:
         shell: bash -l {0}
     steps:
       - uses: actions/checkout@v2
+
+      - name: Install pypi/build
+        run: >-
+          python -m
+          pip install
+          build
+          --user
+      - name: Build a binary wheel and a source tarball
+        run: >-
+          python -m
+          build
+          --sdist
+          --wheel
+          --outdir dist/
+          .
+
+      - name: Publish distribution 📦 to PyPI if Release
+        if: startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: ${{ secrets.PYPI_USER }}
+          password: ${{ secrets.PYPI_PASSWORD }}
+          skip_existing: true
+
       - name: Patch ab env with run requirements from stable recipe
         uses: mikefarah/yq@master
         with:
           cmd: |
             yq eval-all -i 'select(fi == 0).dependencies += select(fi == 1).requirements.run | select(fi == 0)' ci/conda-envs/ab.yml ci/recipe/stable/meta.yaml
+
       - name: Set up conda-build environment
         uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: 3.9
           activate-environment: build
           environment-file: ci/conda-envs/build.yml
+
       - name: Build activity-browser stable
         run: |
           conda build ci/recipe/stable -c romainsacchi

@@ -30,7 +30,12 @@ setup(
     author="Romain Sacchi, Marc van der Meide",
     author_email="romain.sacchi@psi.ch, m.t.van.der.meide@cml.leidenuniv.nl",
     license=open('LICENSE.txt').read(),
-    install_requires=[], # dependency management in conda recipe
+    install_requires=[
+        "activity-browser",
+        "unfold",
+        "datapackage",
+        "pandas",
+    ],
     url="https://github.com/polca/ScenarioLink",
     long_description=open('README.md').read(),
     description="Activity Browser plugin to download scenario-based LCA databases ",
