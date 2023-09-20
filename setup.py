@@ -17,14 +17,9 @@ for dirpath, dirnames, filenames in os.walk("ab_plugin_scenariolink"):
             pkg = pkg.replace(os.path.altsep, '.')
         packages.append(pkg)
 
-if 'VERSION' in os.environ:
-    version = os.environ['VERSION']
-else:
-    version = os.environ.get('GIT_DESCRIBE_TAG', '0.0.0')
-
 setup(
     name="ab_plugin_scenariolink",
-    version=version,
+    version="0.0.3",
     packages=packages,
     include_package_data=True,
     author="Romain Sacchi, Marc van der Meide",
