@@ -27,7 +27,7 @@ The Activity Browser builds upon the [Brightway2](https://brightway.dev) LCA fra
     ```
 
     ```bash
-    conda install -c romainsacchi ab_plugin_scenariolink
+    conda install -c romainsacchi ab-plugin-scenariolink
     ```
 
 4. Launch the Activity Browser.
