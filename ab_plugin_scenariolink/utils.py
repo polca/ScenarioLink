@@ -15,6 +15,7 @@ import io
 from importlib.metadata import version, PackageNotFoundError
 from typing import Tuple
 
+from PySide2 import QtWidgets
 from PySide2.QtWidgets import QApplication
 from PySide2.QtCore import Qt
 
@@ -72,6 +73,16 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
         Package: A datapackage object containing the downloaded files.
         None: Returns None if the download fails.
     """
+    def retry_dialog():
+        choice = QtWidgets.QMessageBox.warning(QtWidgets.QWidget(),
+                                               "Connection failure",
+                                               "Something went wrong with your connection, retry?",
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
+        if choice == QtWidgets.QMessageBox.Yes:
+            return download_files_from_zenodo(record_id)
+        else:
+            return
 
     # Zenodo API endpoint to fetch datapackages
     url = f"https://zenodo.org/api/records/{record_id}"
@@ -94,12 +105,11 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
     print(f"Fetching data from Zenodo: {url}")
 
     # Perform GET request to fetch the raw JSON content
-    response = requests.get(url, timeout=10)
-
-    # Handle unsuccessful requests
-    if response.status_code != 200:
-        print(f"Failed to get data from Zenodo. Status code: {response.status_code}")
-        return None
+    try:
+        response = requests.get(url, timeout=10)
+    except Exception as e:
+        print(f"Failed to get data from Zenodo. Error: {e}")
+        return retry_dialog()
 
     json_data = response.json()
 
@@ -112,7 +122,11 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
             print(f"Downloading file {idx + 1}/{len(json_data['files'])}")
 
             file_url = file_info['links']['self']
-            response = requests.get(file_url, timeout=10)
+            try:
+                response = requests.get(file_url, timeout=10)
+            except Exception as e:
+                print(f'Download failed {e}')
+                return retry_dialog()
 
             # Create a separate temporary directory to store the downloaded ZIP files
             with tempfile.TemporaryDirectory() as download_tmpdirname:
