@@ -55,7 +55,7 @@ class FoldsModel(PandasModel):
 
     def get_record(self, idx):
         """Retrieve a record from a selected row in the DataFrame."""
-        record = self._dataframe.iat[idx.row(), self.record_col]
+        record = self._dataframe.iat[idx.row(), self.df_columns['Zenodo Record ID']]
         self.selected_record = record
         return record
 
