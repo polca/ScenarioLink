@@ -68,7 +68,7 @@ class RightTab(PluginTab):
     def version_check(self) -> None:
         newer, current, latest = UpdateManager.get_versions()
         if newer:
-            label = 'A newer version of ScenarioLink is available (your version: {}, the newest version: {}'\
+            label = 'A newer version of ScenarioLink is available (your version: {}, the newest version: {})'\
                 .format(current, latest)
             self.version_label.setText(label)
 
