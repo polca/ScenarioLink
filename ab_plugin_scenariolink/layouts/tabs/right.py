@@ -102,7 +102,11 @@ class FoldChooserWidget(QtWidgets.QWidget):
 
         self.folds_table = FoldsTable(self)
         self.use_table = True  # bool to see if we need to read this table or instead read the local import
-        self.folds_table.setToolTip('Doubleclick to open a datapackage')
+        if self.folds_table.model.df_columns.get('link', False):
+            self.folds_table.setToolTip('Doubleclick to open a datapackage\n'
+                                        'Right click to open a dashboard with more information')
+        else:
+            self.folds_table.setToolTip('Doubleclick to open a datapackage')
         self.layout.addWidget(self.folds_table)
 
         # Fold custom importer

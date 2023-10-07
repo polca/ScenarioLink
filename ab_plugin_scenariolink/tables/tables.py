@@ -1,9 +1,11 @@
 """
 This module contains the table classes used in the ScenarioLink plugin.
 """
+import webbrowser
 
 from PySide2 import QtWidgets, QtCore
 from PySide2.QtCore import Slot
+from PySide2.QtGui import QContextMenuEvent
 
 from activity_browser.ui.tables.views import ABDataFrameView
 from activity_browser.ui.tables.delegates import CheckboxDelegate
@@ -56,6 +58,22 @@ class FoldsTable(ABDataFrameView):
         self.model.updated.connect(self.custom_view_sizing)
         self.model.updated.connect(self.update_col_width)
 
+    def contextMenuEvent(self, event: QContextMenuEvent) -> None:
+        """ Have the parameter test to see if it can be deleted safely.
+        """
+        if self.indexAt(event.pos()).row() == -1:
+            return
+        if not self.model.df_columns.get('link', False):
+            # the CSV with scenarios does not have a link
+            return
+
+        action = QtWidgets.QAction("Open dashboard in browser")
+        action.triggered.connect(self.open_link)
+        action.setToolTip('Open a dashboard with more information about this scenario in the browser')
+        menu = QtWidgets.QMenu(self)
+        menu.addAction(action)
+        menu.exec_(event.globalPos())
+
     def update_col_width(self):
         self.resizeColumnsToContents()
 
@@ -64,6 +82,10 @@ class FoldsTable(ABDataFrameView):
         """Handle row selection and emit a signal with the selected record."""
         record = self.model.get_record(index)
         signals.get_datapackage_from_record.emit(record)
+
+    def open_link(self):
+        index = self.selectedIndexes()[0]
+        webbrowser.open(self.model.get_link(index.row()))
 
 
 class DataPackageTable(ABDataFrameView):

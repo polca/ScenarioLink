@@ -41,8 +41,9 @@ class FoldsModel(PandasModel):
             dataframe = pd.read_csv(url + "?nocache", header=0, sep=";", dtype=str)
 
             cached = []
+            rec_col = dataframe.columns.tolist().index('Zenodo record ID')
             for idx, row in dataframe.iterrows():
-                record_id = row.values.tolist()[-1]
+                record_id = row.values.tolist()[rec_col]
                 cached.append(record_cached(record_id))
             dataframe['downloaded'] = cached
 
@@ -58,6 +59,10 @@ class FoldsModel(PandasModel):
         record = self._dataframe.iat[idx.row(), self.df_columns['Zenodo record ID']]
         self.selected_record = record
         return record
+
+    def get_link(self, row: int) -> str:
+        return self._dataframe.iloc[row, self.df_columns['link']]
+
 
 
 class DataPackageModel(PandasModel):
