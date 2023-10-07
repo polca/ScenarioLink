@@ -51,7 +51,6 @@ class FoldsModel(PandasModel):
             print('++Failed to import data:', exception)
 
         self.df_columns = {n: i for i, n in enumerate(dataframe.columns.tolist())}
-        print('++', self.df_columns)
         self.updated.emit()
 
     def get_record(self, idx):
