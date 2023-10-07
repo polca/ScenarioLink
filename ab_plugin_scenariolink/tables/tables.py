@@ -35,13 +35,14 @@ class FoldsTable(ABDataFrameView):
         ))
 
         # Specify the column index for the 'cached column' checkbox
-        self.cached_col = 7
+        self.cached_col = 8
         self.setItemDelegateForColumn(self.cached_col, CheckboxDelegate(self))
 
         self.model = FoldsModel(parent=self)
         self._connect_signals()
         self.model.sync()
-        self.setColumnHidden(6, True)  # hide the record column
+        self.record_col = 7
+        self.setColumnHidden(self.record_col, True)  # hide the record column
 
     def _connect_signals(self):
         """Connect signals to slots."""
