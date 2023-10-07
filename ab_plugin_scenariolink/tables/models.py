@@ -71,6 +71,7 @@ class DataPackageModel(PandasModel):
         super().__init__(parent=parent)
         self.data_package = None
         self.include = None
+        self.scenario_name = None
 
         self._connect_signals()
 
@@ -118,6 +119,13 @@ class DataPackageModel(PandasModel):
                     data[key].append(value)
                 else:
                     data[key] = [value]
+
+        name = data.get('name', [False])[0]
+        if name:
+            # this only works because we know a scenario name ends in ' - YYYY', if that changes, this fails
+            self.scenario_name = name[:-7]
+        else:
+            self.scenario_name = None
 
         self.last_include = self.include
         return pd.DataFrame(data)
