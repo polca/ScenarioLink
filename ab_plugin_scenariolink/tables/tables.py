@@ -22,6 +22,8 @@ class FoldsTable(ABDataFrameView):
     def __init__(self, parent=None):
         """Initialize the FoldsTable."""
         super().__init__(parent)
+        self.vis_columns = ['generator', 'generator version', 'creation date', 'scope',
+                            'model', 'scenario', 'source database', 'downloaded']
 
         # Hide the vertical header and set the selection mode
         self.verticalHeader().setVisible(False)
@@ -34,14 +36,18 @@ class FoldsTable(ABDataFrameView):
             QtWidgets.QSizePolicy.Maximum
         ))
 
-        # Specify the column index for the 'cached column' checkbox
-        self.cached_col = 8
-        self.setItemDelegateForColumn(self.cached_col, CheckboxDelegate(self))
-
         self.model = FoldsModel(parent=self)
         self._connect_signals()
         self.model.sync()
-        self.setColumnHidden(self.model.record_col, True)  # hide the record column
+
+        # Specify the column index for the 'cached column' checkbox
+        self.cached_col = self.model.df_columns['downloaded']
+        self.setItemDelegateForColumn(self.cached_col, CheckboxDelegate(self))
+
+        # only show the columns in self.vis_columns and present in the dataframe
+        hide_cols = list(set(self.model.df_columns.keys()) - set(self.vis_columns))
+        for col in hide_cols:
+            self.setColumnHidden(self.model.df_columns[col], True)
 
     def _connect_signals(self):
         """Connect signals to slots."""

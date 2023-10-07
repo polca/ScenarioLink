@@ -23,7 +23,7 @@ class FoldsModel(PandasModel):
         """Initialize the FoldsModel."""
         super().__init__(parent=parent)
         self.selected_record = None
-        self.record_col = 7
+        self.df_columns = {}  # a dict with all column names as keys and indices as values
 
     def sync(self):
         """
@@ -50,6 +50,7 @@ class FoldsModel(PandasModel):
         except (HTTPError, URLError) as exception:
             print('++Failed to import data:', exception)
 
+        self.df_columns = {n: i for i, n in enumerate(dataframe.columns.tolist())}
         self.updated.emit()
 
     def get_record(self, idx):
