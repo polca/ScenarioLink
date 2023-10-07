@@ -51,11 +51,12 @@ class FoldsModel(PandasModel):
             print('++Failed to import data:', exception)
 
         self.df_columns = {n: i for i, n in enumerate(dataframe.columns.tolist())}
+        print('++', self.df_columns)
         self.updated.emit()
 
     def get_record(self, idx):
         """Retrieve a record from a selected row in the DataFrame."""
-        record = self._dataframe.iat[idx.row(), self.df_columns['Zenodo Record ID']]
+        record = self._dataframe.iat[idx.row(), self.df_columns['Zenodo record ID']]
         self.selected_record = record
         return record
 

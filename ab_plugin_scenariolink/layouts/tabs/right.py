@@ -2,6 +2,7 @@ from PySide2 import QtCore, QtWidgets
 from PySide2.QtCore import Qt
 import brightway2 as bw
 from typing import List, Tuple
+from unfold import Unfold
 
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
@@ -166,16 +167,25 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.import_layout = QtWidgets.QHBoxLayout()
         self.import_layout.addWidget(self.import_b)
         self.import_layout.addStretch()
+        self.clear_cache = QtWidgets.QPushButton('Clear unfold cache')
+        self.clear_cache.setToolTip('Unfold caches some data to work faster, though sometimes this can store old data\n'
+                                    'that should be renewed, clearing the cache allows new data to be cached.')
+        self.import_layout.addWidget(self.clear_cache)
         self.import_b_widg = QtWidgets.QWidget()
         self.import_b_widg.setLayout(self.import_layout)
         self.layout.addWidget(self.import_b_widg)
         self.import_b.clicked.connect(self.import_state)
+        self.clear_cache.clicked.connect(self.clear_unfold_cache)
 
         self.layout.addWidget(horizontal_line())
         self.setLayout(self.layout)
 
         signals.no_or_1_scenario_selected.connect(self.manage_sdf_state)
         signals.no_scenario_selected.connect(self.manage_import_button_state)
+
+    def clear_unfold_cache(self):
+        print('Clearing the unfold cache')
+        Unfold.clear_existing_cache()
 
     def import_state(self):
 
