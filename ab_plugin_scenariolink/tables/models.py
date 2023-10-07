@@ -23,7 +23,7 @@ class FoldsModel(PandasModel):
         """Initialize the FoldsModel."""
         super().__init__(parent=parent)
         self.selected_record = None
-        self.record_col = 6
+        self.record_col = 7
 
     def sync(self):
         """

@@ -41,8 +41,7 @@ class FoldsTable(ABDataFrameView):
         self.model = FoldsModel(parent=self)
         self._connect_signals()
         self.model.sync()
-        self.record_col = 7
-        self.setColumnHidden(self.record_col, True)  # hide the record column
+        self.setColumnHidden(self.model.record_col, True)  # hide the record column
 
     def _connect_signals(self):
         """Connect signals to slots."""
