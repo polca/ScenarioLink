@@ -3,6 +3,7 @@ Utility functions for the ScenarioLink plugin.
 This module contains various utility functions that are used throughout the plugin.
 """
 
+from typing import Optional
 import zipfile
 import os
 import tempfile
@@ -25,7 +26,8 @@ def unfold_databases(
         scenarios: list,
         dependencies: dict,
         superstructure: bool,
-        superstructure_db_name: str) -> None:
+        superstructure_db_name: Optional[str],
+        superstructure_sdf_location: Optional[str]) -> None:
     """
     Unfold databases based on a given filepath and scenarios list.
 
@@ -34,7 +36,10 @@ def unfold_databases(
         scenarios (list): The list of scenarios to unfold.
         dependencies (dict): A dictionary containing dependencies.
         superstructure (bool): Flag to indicate if a superstructure should be unfolded.
-        superstructure_db_name
+        superstructure_db_name Optional[str]: name of the database.
+        superstructure_sdf_location Optional[str]: folder path to export the SDF file to.
+
+    Last two arguments are required if superstructure is True
 
     Returns:
         None: This function performs the unfolding operation but does not return anything.
@@ -55,7 +60,8 @@ def unfold_databases(
             dependencies=dependencies,
             scenarios=scenarios,
             superstructure=superstructure,
-            name=superstructure_db_name
+            name=superstructure_db_name,
+            export_dir=superstructure_sdf_location
         )
     except Exception as e:
         print(f"Failed to unfold database: {e}")

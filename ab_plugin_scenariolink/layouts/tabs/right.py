@@ -54,15 +54,20 @@ class RightTab(PluginTab):
         self.setLayout(self.layout)
 
     def record_selected(self, state):
+        """A record was selected by user, show the scenario chooser."""
         self.scenario_chooser.setVisible(state)
 
-    def generate_database(self, include_scenarios, dependencies, as_superstructure, superstructure_db_name):
+    def generate_database(self, include_scenarios, dependencies, as_superstructure,
+                          superstructure_db_name, superstructure_sdf_location):
+        """Start the database generation with the selected scenarios & SDF info."""
         if self.fold_chooser.use_table:
             record = self.fold_chooser.folds_table.model.selected_record
 
         # generate
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
-        unfold_databases(record, include_scenarios, dependencies, as_superstructure, superstructure_db_name)
+        unfold_databases(record, include_scenarios, dependencies, as_superstructure,
+                         superstructure_db_name, superstructure_sdf_location)
+        # update AB databases table
         ab_signals.databases_changed.emit()
         QtWidgets.QApplication.restoreOverrideCursor()
 
@@ -139,6 +144,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         super(ScenarioChooserWidget, self).__init__()
 
         self.layout = QtWidgets.QVBoxLayout()
+        self.sdf_path = None
 
         # Label
         self.label = QtWidgets.QLabel('Choose the scenarios you want to install')
@@ -155,13 +161,18 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.sdf_name_field = QtWidgets.QLineEdit()
         self.sdf_name_field.setPlaceholderText('Superstructure database name (optional)')
         self.sdf_name_field.setEnabled(False)
+        self.sdf_file_loc = QtWidgets.QPushButton('SDF location')
+        self.sdf_file_loc.setToolTip('Choose a folder to export the SDF scenario file to')
+        self.sdf_file_loc.setEnabled(False)
+
         self.sdf_layout = QtWidgets.QHBoxLayout()
         self.sdf_layout.addWidget(self.sdf_check)
         self.sdf_layout.addWidget(self.sdf_name_field)
+        self.sdf_layout.addWidget(self.sdf_file_loc)
         self.sdf_layout.addStretch()
         self.sdf_widget = QtWidgets.QWidget()
         self.sdf_widget.setToolTip('Instead of writing multiple databases per scenario,\n'
-                                   'write one database and a scenario difference file')
+                                   'write one database and an SDF scenario difference file')
         self.sdf_widget.setLayout(self.sdf_layout)
         self.layout.addWidget(self.sdf_widget)
 
@@ -184,8 +195,10 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.layout.addWidget(horizontal_line())
         self.setLayout(self.layout)
 
+        # signals
         signals.no_or_1_scenario_selected.connect(self.manage_sdf_state)
         signals.no_scenario_selected.connect(self.manage_import_button_state)
+        self.sdf_file_loc.clicked.connect(self.choose_sdf_location)
 
     def clear_unfold_cache(self):
         print('Clearing the unfold cache')
@@ -196,6 +209,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         # convert the binary list to a list of indices that were selected
         include_scenarios = [i for i, state in enumerate(self.data_package_table.model.include) if state]
 
+        # match the dependencies (databases) of the scenarios to the correct databases in AB
         dependencies = []
         for dependency in self.data_package_table.model.data_package.descriptor['dependencies']:
             dependencies.append(dependency['name'])
@@ -203,15 +217,29 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         if not dependencies:
             return
 
+        # read/set the correct data for SDF
+        as_sdf = self.sdf_check.isChecked()
         sdf_db = self.sdf_name_field.text()
-        if sdf_db == '':
+        if sdf_db == '' and not as_sdf:
             sdf_db = None
+        elif sdf_db == '' and as_sdf:
+            # no name was chosen for the superstructure, generate a descriptive name
+            db = [db for db in dependencies.values() if db != 'biosphere3'][0]  # get db name
+            scn = self.data_package_table.model.scenario_name
+            sdf_db = ' - '.join([db, scn])
+        sdf_loc = self.sdf_file_loc
+        if sdf_loc == '':
+            sdf_loc = None
+
+        # start database generation
         signals.generate_db.emit(
             include_scenarios,  # List of scenario indices to include
             dependencies,  # dict of dependency names (translated between datapackage and current bw project
-            self.sdf_check.isChecked(),  # whether to make this into superstructure format
-            sdf_db  # superstructure database name (str or None)
+            as_sdf,  # whether to make this into superstructure format (bool)
+            sdf_db,  # superstructure database name (str or None)
+            sdf_loc  # superstructure SDF file location (str or None)
         )
+        self.sdf_file_loc = None
 
     def relink_database(self, depends: list) -> dict:
         """Relink technosphere exchanges within the given Fold."""
@@ -235,10 +263,18 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
             self.sdf_check.setChecked(False)
         self.sdf_check.setEnabled(not state)
         self.sdf_name_field.setEnabled(not state)
+        self.sdf_file_loc.setEnabled(not state)
 
     def manage_import_button_state(self, state: bool) -> None:
         """Change import button UI elements depending on whether >=1 scenarios are selected."""
         self.import_b.setEnabled(not state)
+
+    def choose_sdf_location(self) -> None:
+        """Start dialog so user can choose location for SDF file export."""
+        path = QtWidgets.QFileDialog.getExistingDirectory(
+            caption="Select location to export SDF file to",
+        )
+        self.sdf_file_loc = path
 
 
 class RelinkDialog(DatabaseLinkingDialog):

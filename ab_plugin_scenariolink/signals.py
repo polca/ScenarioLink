@@ -5,7 +5,7 @@ class Signals(QObject):
     get_datapackage_from_disk = Signal()  # Get a datapackage from disk
     record_ready = Signal(bool)  # datapackage extraction is complete and scenarios table should be shown
 
-    generate_db = Signal(list, dict, bool, object)  # Generate database from selected scenario data
+    generate_db = Signal(list, dict, bool, object, object)  # Generate database from selected scenario data
 
     no_or_1_scenario_selected = Signal(bool)  # True when no or one scenarios are selected
     no_scenario_selected = Signal(bool)  # True when no scenario is selected
