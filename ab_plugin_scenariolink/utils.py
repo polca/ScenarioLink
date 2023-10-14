@@ -15,6 +15,8 @@ import pandas as pd
 import io
 from importlib.metadata import version, PackageNotFoundError
 from typing import Tuple
+from tqdm import tqdm
+import hashlib
 
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QApplication
@@ -67,6 +69,42 @@ def unfold_databases(
         print(f"Failed to unfold database: {e}")
         return
 
+def download_file_with_progress(file_url, output_path):
+    # Function to download a file with a progress bar
+    with requests.get(file_url, stream=True, timeout=100, allow_redirects=True) as response:
+        response.raise_for_status()
+        total_size = int(response.headers.get('content-length', 0))
+        block_size = 1024  # Adjust the block size as needed
+
+        with tqdm(
+                total=total_size,
+                unit='B',
+                unit_scale=True,
+                unit_divisor=block_size,
+                dynamic_ncols=True,  # Allow dynamic resizing of the progress bar
+                desc=os.path.basename(output_path),
+        ) as progress_bar:
+            with open(output_path, 'wb') as file:
+                for data in response.iter_content(block_size):
+                    progress_bar.update(len(data))
+                    file.write(data)
+
+def verify_file_integrity(file_path, expected_hash):
+    # Calculate the hash of the file and compare it to the expected hash
+    try:
+
+        # read file and calculate MD5 hash
+        with open(file_path, "rb") as f:
+            file_hash = hashlib.md5()
+            chunk = f.read(8192)
+            while chunk:
+                file_hash.update(chunk)
+                chunk = f.read(8192)
+
+        return file_hash.hexdigest() == expected_hash
+    except Exception as e:
+        print(f"Error verifying file integrity: {e}")
+        return False
 
 def download_files_from_zenodo(record_id: str) -> [Package, None]:
     """
@@ -91,7 +129,7 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
             return
 
     # Zenodo API endpoint to fetch datapackages
-    url = f"https://zenodo.org/api/records/{record_id}"
+    url = f"https://zenodo.org/api/records/{record_id}/files"
 
     # Create a folder to save the downloaded files
     folder_name = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
@@ -112,7 +150,7 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
 
     # Perform GET request to fetch the raw JSON content
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=100)
     except Exception as e:
         print(f"Failed to get data from Zenodo. Error: {e}")
         return retry_dialog()
@@ -124,37 +162,47 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
 
     # Create a final ZIP file to store the downloaded files
     with zipfile.ZipFile(os.path.join(folder_name, zip_filename), 'w') as final_zip:
-        for idx, file_info in enumerate(json_data['files']):
-            print(f"Downloading file {idx + 1}/{len(json_data['files'])}")
+        for idx, file_info in enumerate(json_data['entries']):
+            print(f"Downloading file {idx + 1}/{len(json_data['entries'])}")
+            file_url = f"{file_info['links']['content']}"
+            download_tmpdirname = tempfile.TemporaryDirectory().name
+            # Create a temporary directory to store the downloaded ZIP file
+            os.makedirs(download_tmpdirname)
+            downloaded_zip_path = os.path.join(download_tmpdirname, "downloaded.zip")
 
-            file_url = file_info['links']['self']
             try:
-                response = requests.get(file_url, timeout=10)
+                download_file_with_progress(file_url, downloaded_zip_path)
             except Exception as e:
                 print(f'Download failed {e}')
                 return retry_dialog()
 
-            # Create a separate temporary directory to store the downloaded ZIP files
-            with tempfile.TemporaryDirectory() as download_tmpdirname:
-                downloaded_zip_path = os.path.join(download_tmpdirname, "downloaded.zip")
+            # Verify the integrity of the downloaded file
+            # fetch the MD5 hash from the JSON
+            expected_hash = file_info['checksum'][4:]
 
-                # Save the downloaded ZIP file locally
-                with open(downloaded_zip_path, 'wb') as file:
-                    file.write(response.content)
+            if verify_file_integrity(downloaded_zip_path, expected_hash):
+                print(f"File {idx + 1} verified successfully.")
+            else:
+                print(f"File {idx + 1} verification failed. Deleting {downloaded_zip_path}.")
+                # Delete the temporary and final files if the hash doesn't match
+                os.remove(downloaded_zip_path)
+                os.remove(os.path.join(folder_name, zip_filename))
+                print("File verification failed.")
+                return retry_dialog()
 
-                # Create another temporary directory for the extracted files
-                with tempfile.TemporaryDirectory() as extract_tmpdirname:
-                    # Extract the ZIP file's contents
-                    with zipfile.ZipFile(downloaded_zip_path, 'r') as downloaded_zip:
-                        downloaded_zip.extractall(extract_tmpdirname)
+            # Create another temporary directory for the extracted files
+            with tempfile.TemporaryDirectory() as extract_tmpdirname:
+                # Extract the ZIP file's contents
+                with zipfile.ZipFile(downloaded_zip_path, 'r') as downloaded_zip:
+                    downloaded_zip.extractall(extract_tmpdirname)
 
-                    # Add the extracted files to the final ZIP file
-                    for root, _, files in os.walk(extract_tmpdirname):
-                        for file in files:
-                            # Calculate the relative path
-                            relative_path = os.path.relpath(os.path.join(root, file), extract_tmpdirname)
-                            # Add the file to the ZIP archive with its relative path
-                            final_zip.write(os.path.join(root, file), relative_path)
+                # Add the extracted files to the final ZIP file
+                for root, _, files in os.walk(extract_tmpdirname):
+                    for file in files:
+                        # Calculate the relative path
+                        relative_path = os.path.relpath(os.path.join(root, file), extract_tmpdirname)
+                        # Add the file to the ZIP archive with its relative path
+                        final_zip.write(os.path.join(root, file), relative_path)
         print("Done.")
     # Restore the original cursor
     QApplication.restoreOverrideCursor()

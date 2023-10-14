@@ -6,6 +6,12 @@ source:
   git_rev: main
   git_url: https://github.com/polca/ScenarioLink.git
 
+channels:
+  - romainsacchi
+  - conda-forge
+  - defaults
+
+
 build:
   noarch: python
   number: 0
@@ -24,6 +30,7 @@ requirements:
     - unfold
     - datapackage
     - pandas
+    - tqdm
 
 about:
   home: https://github.com/polca/ScenarioLink
