@@ -19,7 +19,7 @@ for dirpath, dirnames, filenames in os.walk("ab_plugin_scenariolink"):
 
 setup(
     name="ab_plugin_scenariolink",
-    version="0.0.5",
+    version="0.0.6",
     packages=packages,
     include_package_data=True,
     author="Romain Sacchi, Marc van der Meide",
