@@ -2,7 +2,7 @@ from PySide2 import QtCore, QtWidgets
 from PySide2.QtCore import Qt
 import brightway2 as bw
 from typing import List, Tuple
-from unfold import Unfold
+from unfold.unfold import clear_cache
 
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
@@ -202,7 +202,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
 
     def clear_unfold_cache(self):
         print('Clearing the unfold cache')
-        Unfold.clear_existing_cache()
+        clear_cache()
 
     def import_state(self):
 
