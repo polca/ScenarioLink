@@ -48,9 +48,7 @@ class RightTab(PluginTab):
         self.scenario_chooser.setVisible(False)
 
         self.layout.addStretch()
-
         self.layout.addWidget(self.version_label)
-
         self.setLayout(self.layout)
 
     def record_selected(self, state):
@@ -60,8 +58,11 @@ class RightTab(PluginTab):
     def generate_database(self, include_scenarios, dependencies, as_superstructure,
                           superstructure_db_name, superstructure_sdf_location):
         """Start the database generation with the selected scenarios & SDF info."""
+
+        # get the record from the fold chooser
         if self.fold_chooser.use_table:
             record = self.fold_chooser.folds_table.model.selected_record
+
 
         # generate
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
