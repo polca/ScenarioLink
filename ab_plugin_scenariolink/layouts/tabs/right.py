@@ -59,14 +59,15 @@ class RightTab(PluginTab):
                           superstructure_db_name, superstructure_sdf_location):
         """Start the database generation with the selected scenarios & SDF info."""
 
-        # get the record from the fold chooser
+        # get the file from the fold chooser
         if self.fold_chooser.use_table:
-            record = self.fold_chooser.folds_table.model.selected_record
-
+            file = self.fold_chooser.folds_table.model.selected_record
+        else:
+            file = self.fold_chooser.custom_package_path
 
         # generate
         QtWidgets.QApplication.setOverrideCursor(Qt.WaitCursor)
-        unfold_databases(record, include_scenarios, dependencies, as_superstructure,
+        unfold_databases(file, include_scenarios, dependencies, as_superstructure,
                          superstructure_db_name, superstructure_sdf_location)
         # update AB databases table
         ab_signals.databases_changed.emit()
@@ -85,6 +86,7 @@ class FoldChooserWidget(QtWidgets.QWidget):
         super(FoldChooserWidget, self).__init__()
 
         self.layout = QtWidgets.QVBoxLayout()
+        self.custom_package_path = None
 
         # label
         self.label = QtWidgets.QLabel('Select the datapackage you want to use')
@@ -129,7 +131,7 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.setLayout(self.layout)
 
         self.radio_custom.toggled.connect(self.radio_toggled)
-        self.custom.clicked.connect(lambda: signals.get_datapackage_from_disk.emit())
+        self.custom.clicked.connect(self.get_datapackage_custom_path)
 
     def radio_toggled(self, toggled: bool) -> None:
         self.use_table = not toggled
@@ -138,6 +140,16 @@ class FoldChooserWidget(QtWidgets.QWidget):
 
         self.custom.setVisible(toggled)
         signals.record_ready.emit(False)
+
+    def get_datapackage_custom_path(self) -> None:
+        """"Start a dialog to retrieve a datapackage from disk."""
+        path, _ = QtWidgets.QFileDialog.getOpenFileName(
+            caption="Select datapackage zip file",
+            filter='*.zip'
+        )
+        print('file selected from path:', path)
+        self.custom_package_path = path
+        signals.get_datapackage_from_disk.emit(path)
 
 
 class ScenarioChooserWidget(QtWidgets.QWidget):

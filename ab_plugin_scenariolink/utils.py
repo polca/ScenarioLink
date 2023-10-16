@@ -24,7 +24,7 @@ from PySide2.QtCore import Qt
 
 
 def unfold_databases(
-        filename: str,
+        file: str,
         scenarios: list,
         dependencies: dict,
         superstructure: bool,
@@ -34,7 +34,7 @@ def unfold_databases(
     Unfold databases based on a given filepath and scenarios list.
 
     Parameters:
-        filename (str): The path to the database file.
+        file (str): Either a path or a recordID
         scenarios (list): The list of scenarios to unfold.
         dependencies (dict): A dictionary containing dependencies.
         superstructure (bool): Flag to indicate if a superstructure should be unfolded.
@@ -47,12 +47,14 @@ def unfold_databases(
         None: This function performs the unfolding operation but does not return anything.
     """
 
-    cache_folder = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
-    if not os.path.exists(cache_folder):
-        os.makedirs(cache_folder)
-
-    filename = f"{filename}.zip"
-    filepath = os.path.join(cache_folder, os.path.basename(filename))
+    if not os.path.exists(file):
+        # we only received a recordID (not a valid path), convert to path
+        cache_folder = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
+        filename = f"{file}.zip"
+        filepath = os.path.join(cache_folder, os.path.basename(filename))
+    else:
+        # we received a valid path
+        filepath = file
 
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File {filepath} does not exist.")

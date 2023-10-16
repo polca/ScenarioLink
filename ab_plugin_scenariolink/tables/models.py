@@ -147,13 +147,8 @@ class DataPackageModel(PandasModel):
         self.include = None
         self.sync_with_package(dp)
 
-    def get_datapackage_from_disk(self) -> None:
+    def get_datapackage_from_disk(self, path) -> None:
         """"Start a dialog to retrieve a datapackage from disk."""
-        path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            caption="Select datapackage zip file",
-            filter='*.zip'
-        )
-        print('file selected from path:', path)
         dp = package_from_path(path)
         self.include = None
         self.sync_with_package(dp)
