@@ -27,7 +27,7 @@ requirements:
     - pandas
   run:
     - activity-browser
-    - unfold
+    - unfold >=1.1.5
     - datapackage
     - pandas
     - tqdm
@@ -41,6 +41,5 @@ about:
   description: |
     The [Activity Browser](https://github.com/LCA-ActivityBrowser/activity-browser)
     is a graphical user interface for the [brightway2](https://brightway.dev/)
-    advanced life cycle assessment framework.
-    This plugin allows you to import scenario-based LCA databases 
+    advanced life cycle assessment framework. This plugin allows you to import scenario-based LCA databases 
     through the use of `unfold` datapackages.
