@@ -20,15 +20,18 @@ The Activity Browser builds upon the [Brightway2](https://brightway.dev) LCA fra
 ## Installation
 
 1. Activate your existing Activity Browser conda environment.
-2. Install the ScenarioLink plugin using Pypi or conda:
+2. Install the ScenarioLink plugin using conda (preferred) or Pypi:
+
+    ```bash
+    conda install -c romainsacchi ab-plugin-scenariolink
+    ```
+   
+    or
 
     ```bash
     pip install ab-plugin-scenariolink
     ```
 
-    ```bash
-    conda install -c romainsacchi ab-plugin-scenariolink
-    ```
 
 4. Launch the Activity Browser.
 5. Navigate to `Tools > Plugins` and select ScenarioLink from the plugin list.
