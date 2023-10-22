@@ -227,6 +227,21 @@ def record_cached(record: str) -> bool:
     zip_filename = record + '.zip'
     return os.path.exists(os.path.join(folder_name, zip_filename))
 
+def clear_sl_datapackage_cache() -> None:
+    """Clear all datapackages from the ScenarioLink cache"""
+    folder_name = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
+    if not os.path.exists(folder_name):
+        # the cache folder does not exist, so nothing to clear
+        return
+
+    # Get a list of all the files in the folder
+    for filename in os.listdir(folder_name):
+        file_path = os.path.join(folder_name, filename)
+
+        # Remove each file in the list
+        if os.path.isfile(file_path) or os.path.islink(file_path):
+            os.unlink(file_path)
+
 class UpdateManager():
 
     @classmethod

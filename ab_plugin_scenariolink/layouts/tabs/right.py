@@ -11,7 +11,7 @@ from activity_browser.signals import signals as ab_signals
 
 from ...tables.tables import FoldsTable, DataPackageTable
 from ...signals import signals
-from ...utils import unfold_databases, UpdateManager
+from ...utils import unfold_databases, clear_sl_datapackage_cache, UpdateManager
 
 class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
@@ -96,10 +96,16 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.radio_default = QtWidgets.QRadioButton('Online datapackages')
         self.radio_default.setChecked(True)
         self.radio_custom = QtWidgets.QRadioButton('Local datapackages')
+        self.clear_datapackage_cache = QtWidgets.QPushButton('Clear datapackage cache')
+        self.clear_datapackage_cache.setToolTip(
+            'ScenarioLink caches the downloaded datapackages, though sometimes\n'
+            'these may be updated and you need to clear the cache.'
+        )
         self.radio_layout = QtWidgets.QHBoxLayout()
         self.radio_layout.addWidget(self.radio_default)
         self.radio_layout.addWidget(self.radio_custom)
         self.radio_layout.addStretch()
+        self.radio_layout.addWidget(self.clear_datapackage_cache)
         self.radio_widget = QtWidgets.QWidget()
         self.radio_widget.setLayout(self.radio_layout)
         self.layout.addWidget(self.radio_widget)
@@ -130,12 +136,15 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.layout.addWidget(horizontal_line())
         self.setLayout(self.layout)
 
+        # signals
         self.radio_custom.toggled.connect(self.radio_toggled)
         self.custom.clicked.connect(self.get_datapackage_custom_path)
+        self.clear_datapackage_cache.clicked.connect(self.do_clear_cache)
 
     def radio_toggled(self, toggled: bool) -> None:
         self.use_table = not toggled
         self.folds_table.setVisible(not toggled)
+        self.clear_datapackage_cache.setVisible(not toggled)
         self.table_label.setVisible(not toggled)
 
         self.custom.setVisible(toggled)
@@ -150,6 +159,11 @@ class FoldChooserWidget(QtWidgets.QWidget):
         print('file selected from path:', path)
         self.custom_package_path = path
         signals.get_datapackage_from_disk.emit(path)
+
+    def do_clear_cache(self) -> None:
+        print('Clearing the datapackage cache')
+        clear_sl_datapackage_cache()
+        self.folds_table.model.sync()
 
 
 class ScenarioChooserWidget(QtWidgets.QWidget):
@@ -195,15 +209,15 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.import_layout = QtWidgets.QHBoxLayout()
         self.import_layout.addWidget(self.import_b)
         self.import_layout.addStretch()
-        self.clear_cache = QtWidgets.QPushButton('Clear unfold cache')
-        self.clear_cache.setToolTip('Unfold caches some data to work faster, though sometimes this can store old data\n'
+        self.clear_unfold_cache = QtWidgets.QPushButton('Clear unfold cache')
+        self.clear_unfold_cache.setToolTip('Unfold caches some data to work faster, though sometimes this can store old data\n'
                                     'that should be renewed, clearing the cache allows new data to be cached.')
-        self.import_layout.addWidget(self.clear_cache)
+        self.import_layout.addWidget(self.clear_unfold_cache)
         self.import_b_widg = QtWidgets.QWidget()
         self.import_b_widg.setLayout(self.import_layout)
         self.layout.addWidget(self.import_b_widg)
         self.import_b.clicked.connect(self.import_state)
-        self.clear_cache.clicked.connect(self.clear_unfold_cache)
+        self.clear_unfold_cache.clicked.connect(self.do_clear_cache)
 
         self.layout.addWidget(horizontal_line())
         self.setLayout(self.layout)
@@ -213,7 +227,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         signals.no_scenario_selected.connect(self.manage_import_button_state)
         self.sdf_file_loc.clicked.connect(self.choose_sdf_location)
 
-    def clear_unfold_cache(self):
+    def do_clear_cache(self):
         print('Clearing the unfold cache')
         clear_cache()
 

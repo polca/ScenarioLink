@@ -84,6 +84,7 @@ class FoldsTable(ABDataFrameView):
         signals.get_datapackage_from_record.emit(record)
 
     def open_link(self):
+        """Open the link in the selected row of the table."""
         index = self.selectedIndexes()[0]
         webbrowser.open(self.model.get_link(index.row()))
 

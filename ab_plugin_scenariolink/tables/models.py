@@ -1,7 +1,6 @@
 """
 This module contains the models for the tables used in the ScenarioLink plugin.
 """
-from PySide2 import QtWidgets
 
 from urllib.error import HTTPError, URLError
 import pandas as pd
@@ -24,6 +23,9 @@ class FoldsModel(PandasModel):
         super().__init__(parent=parent)
         self.selected_record = None
         self.df_columns = {}  # a dict with all column names as keys and indices as values
+
+        # once a datapackage is extracted, update this table too so the 'cached' column is updated if needed
+        signals.record_ready.connect(self.record_ready)
 
     def sync(self):
         """
@@ -63,6 +65,9 @@ class FoldsModel(PandasModel):
     def get_link(self, row: int) -> str:
         return self._dataframe.iloc[row, self.df_columns['link']]
 
+    def record_ready(self, ready: bool) -> None:
+        if ready:
+            self.sync()
 
 
 class DataPackageModel(PandasModel):
