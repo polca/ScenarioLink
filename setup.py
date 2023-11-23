@@ -27,7 +27,7 @@ setup(
     license=open('LICENSE.txt').read(),
     install_requires=[
         "activity-browser",
-        "unfold >=1.1.6",
+        "unfold >=1.1.7",
         "datapackage",
         "pandas",
         "tqdm"
