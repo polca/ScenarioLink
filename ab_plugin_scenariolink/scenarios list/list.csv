@@ -14,3 +14,7 @@ premise;1.8.2.dev1;2023-12-05;Global;image/Ammonia;BAU & Sustainable development
 premise;1.8.2.dev1;2023-12-05;Global;image;SSP1-Base;ecoinvent 3.8 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"10260111"
 premise;1.8.2.dev1;2023-12-05;Global;image;SSP2-Base;ecoinvent 3.8 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"10260113"
 premise;1.8.2.dev1;2023-12-05;Global;image;SSP2-RCP26;ecoinvent 3.8 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"10260122"
+premise;1.8.2.dev1;2023-12-05;Global;image;SSP2-RCP19;ecoinvent 3.8 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"10262635"
+premise;1.8.2.dev1;2023-12-05;Global;remind;SSP2-Base;ecoinvent 3.8 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"10262661"
+premise;1.8.2.dev1;2023-12-05;Global;remind;SSP2-NDC;ecoinvent 3.8 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"10262682"
+premise;1.8.2.dev1;2023-12-05;Global;remind;SSP2-NPi;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"10262698"
