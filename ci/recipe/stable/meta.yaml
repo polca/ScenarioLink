@@ -22,12 +22,12 @@ requirements:
     - python
     - setuptools
     - conda-verify
-    - unfold >=2023.11.22
+    - unfold >=2024.02.10
     - datapackage
     - pandas
   run:
-    - activity-browser
-    - unfold >=2023.11.22
+    - activity-browser >=2.9.7
+    - unfold >=2024.02.10
     - datapackage
     - pandas
     - tqdm

@@ -26,8 +26,8 @@ setup(
     author_email="romain.sacchi@psi.ch, m.t.van.der.meide@cml.leidenuniv.nl",
     license=open('LICENSE.txt').read(),
     install_requires=[
-        "activity-browser",
-        "unfold >=1.1.7",
+        "activity-browser >=2.9.7",
+        "unfold >=1.1.9",
         "datapackage",
         "pandas",
         "tqdm"

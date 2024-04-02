@@ -17,6 +17,10 @@ The Activity Browser builds upon the [Brightway2](https://brightway.dev) LCA fra
 
 ![Flow Diagram](assets/flow_diagram.png)
 
+## Requirements
+
+- ``activty-browser >= 2.9.7``
+
 ## Installation
 
 1. Activate your existing Activity Browser conda environment.
