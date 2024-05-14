@@ -30,11 +30,10 @@ jobs:
 
       - name: Publish distribution 📦 to PyPI if Release
         if: startsWith(github.ref, 'refs/tags')
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          user: ${{ secrets.PYPI_USER }}
-          password: ${{ secrets.PYPI_PASSWORD }}
-          skip_existing: true
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          skip-existing: true
 
       - name: Patch ab env with run requirements from stable recipe
         uses: mikefarah/yq@master
