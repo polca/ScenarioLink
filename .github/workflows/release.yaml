@@ -1,8 +1,5 @@
 name: stable release
-on:
-  push:
-    tags:        
-      - '*'
+on: [push, pull_request]
 
 jobs:
   release:
