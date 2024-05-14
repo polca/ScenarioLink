@@ -19,7 +19,7 @@ for dirpath, dirnames, filenames in os.walk("ab_plugin_scenariolink"):
 
 setup(
     name="ab_plugin_scenariolink",
-    version="0.0.6",
+    version="0.0.7",
     packages=packages,
     include_package_data=True,
     author="Romain Sacchi, Marc van der Meide",
@@ -27,7 +27,7 @@ setup(
     license=open('LICENSE.txt').read(),
     install_requires=[
         "activity-browser >=2.9.7",
-        "unfold >=1.1.9",
+        "unfold >=1.2.0",
         "datapackage",
         "pandas",
         "tqdm"
