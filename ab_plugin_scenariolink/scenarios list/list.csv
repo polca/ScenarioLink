@@ -11,6 +11,7 @@ premise;2.1.0;2024-05-19;Global;image;SSP2-RCP19;ecoinvent 3.9 cutoff;https://pr
 premise;2.1.0;2024-05-19;Global;image;SSP1-Base;ecoinvent 3.9 conseq.;https://premisedash-6f5a0259c487.herokuapp.com/;"11271780"
 premise;2.1.0;2024-05-19;Global;image;SSP2-Base;ecoinvent 3.9 conseq.;https://premisedash-6f5a0259c487.herokuapp.com/;"11271864"
 premise;2.1.0;2024-05-19;Global;image;SSP2-RCP26;ecoinvent 3.9 conseq.;https://premisedash-6f5a0259c487.herokuapp.com/;"11279372"
+premise;2.1.0;2024-05-19;Global;image;SSP2-RCP19;ecoinvent 3.9 conseq.;https://premisedash-6f5a0259c487.herokuapp.com/;"11279443"
 premise;1.8.2.dev1;2023-12-05;Switzerland;image/EP 2050+;BAU & ZERO;ecoinvent 3.9 cutoff;https://github.com/premise-community-scenarios/energy-perspective-2050-switzerland;"10259709"
 premise;1.8.2.dev1;2023-12-05;Global;image/Cobalt;BAU & Sustainable development;ecoinvent 3.9 cutoff;https://github.com/premise-community-scenarios/cobalt-perspective-2050;"10259754"
 premise;1.8.2.dev1;2023-12-05;Global;image/Ammonia;BAU & Sustainable development;ecoinvent 3.9 cutoff;https://github.com/premise-community-scenarios/ammonia-prospective-scenarios;"10259759"
