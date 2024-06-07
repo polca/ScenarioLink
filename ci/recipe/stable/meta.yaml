@@ -22,12 +22,12 @@ requirements:
     - python
     - setuptools
     - conda-verify
-    - unfold >=2024.02.10
+    - unfold >=2024.05.14
     - datapackage
     - pandas
   run:
-    - activity-browser >=2.9.7
-    - unfold >=2024.02.10
+    - activity-browser
+    - unfold
     - datapackage
     - pandas
     - tqdm
@@ -37,7 +37,7 @@ about:
   license: LGPL3+
   license_family: LGPL
   license_file: LICENSE.txt
-  summary: Deploy `unfold` datapackages in Activity Browser
+  summary: Deploy `unfold` data packages in Activity Browser
   description: |
     The [Activity Browser](https://github.com/LCA-ActivityBrowser/activity-browser)
     is a graphical user interface for the [brightway2](https://brightway.dev/)
