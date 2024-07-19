@@ -24,8 +24,8 @@ class FoldsTable(ABDataFrameView):
     def __init__(self, parent=None):
         """Initialize the FoldsTable."""
         super().__init__(parent)
-        self.vis_columns = ['generator', 'generator version', 'creation date', 'scope',
-                            'model', 'scenario', 'source database', 'downloaded']
+        self.vis_columns = ["generator", "generator version", "creation date", "scope",
+                            "model", "scenario", "source database", "downloaded"]
 
         # Hide the vertical header and set the selection mode
         self.verticalHeader().setVisible(False)
@@ -43,7 +43,7 @@ class FoldsTable(ABDataFrameView):
         self.model.sync()
 
         # Specify the column index for the 'cached column' checkbox
-        self.cached_col = self.model.df_columns['downloaded']
+        self.cached_col = self.model.df_columns["downloaded"]
         self.setItemDelegateForColumn(self.cached_col, CheckboxDelegate(self))
 
         # only show the columns in self.vis_columns and present in the dataframe
@@ -62,13 +62,13 @@ class FoldsTable(ABDataFrameView):
         """
         if self.indexAt(event.pos()).row() == -1:
             return
-        if not self.model.df_columns.get('link', False):
+        if not self.model.df_columns.get("link", False):
             # the CSV with scenarios does not have a link
             return
 
         action = QtWidgets.QAction("Open dashboard in browser")
         action.triggered.connect(self.open_link)
-        action.setToolTip('Open a dashboard with more information about this scenario in the browser')
+        action.setToolTip("Open a dashboard with more information about this scenario in the browser")
         menu = QtWidgets.QMenu(self)
         menu.addAction(action)
         menu.exec_(event.globalPos())
