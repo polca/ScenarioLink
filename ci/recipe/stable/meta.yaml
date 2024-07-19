@@ -19,12 +19,13 @@ build:
 
 requirements:
   build:
-    - python
-    - setuptools
+    - activity-browser >=2.10.1
     - conda-verify
-    - unfold >=2024.05.14
     - datapackage
     - pandas
+    - python
+    - setuptools
+    - unfold >=2024.05.14
   run:
     - activity-browser
     - unfold

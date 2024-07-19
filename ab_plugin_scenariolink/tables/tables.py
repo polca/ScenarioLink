@@ -55,7 +55,6 @@ class FoldsTable(ABDataFrameView):
         """Connect signals to slots."""
         self.doubleClicked.connect(self.row_selected)
         self.model.updated.connect(self.update_proxy_model)
-        self.model.updated.connect(self.custom_view_sizing)
         self.model.updated.connect(self.update_col_width)
 
     def contextMenuEvent(self, event: QContextMenuEvent) -> None:
@@ -117,7 +116,6 @@ class DataPackageTable(ABDataFrameView):
     def _connect_signals(self):
         """Connect signals to slots."""
         self.model.updated.connect(self.update_proxy_model)
-        self.model.updated.connect(self.custom_view_sizing)
         self.model.updated.connect(lambda: signals.record_ready.emit(True))
         self.model.updated.connect(self.update_col_width)
 
