@@ -17,12 +17,14 @@ from importlib.metadata import version, PackageNotFoundError
 from typing import Tuple
 from tqdm import tqdm
 import hashlib
+from logging import getLogger
 
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QApplication
 from PySide2.QtCore import Qt
 
-from activity_browser import log
+
+log = getLogger(__name__)
 
 
 def unfold_databases(

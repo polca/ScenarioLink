@@ -2,13 +2,15 @@
 This module contains the models for the tables used in the ScenarioLink plugin.
 """
 
+from logging import getLogger
 from urllib.error import HTTPError, URLError
 import pandas as pd
 
 from activity_browser.ui.tables.models import PandasModel
-from activity_browser import log
 from ..utils import download_files_from_zenodo, package_from_path, record_cached
 from ..signals import signals
+
+log = getLogger(__name__)
 
 
 class FoldsModel(PandasModel):
