@@ -6,7 +6,7 @@ class Plugin(ab.Plugin):
 
     def __init__(self):
         infos = {
-            'name': "ScenarioLink",
+            "name": "ScenarioLink",
         }
         ab.Plugin.__init__(self, infos)
 

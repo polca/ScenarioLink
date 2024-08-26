@@ -4,6 +4,7 @@ import brightway2 as bw
 from typing import List, Tuple
 from unfold.unfold import clear_cache
 
+from activity_browser import log
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
 from activity_browser.ui.widgets.dialog import DatabaseLinkingDialog
@@ -22,7 +23,7 @@ class RightTab(PluginTab):
         self.fold_chooser = FoldChooserWidget()
         self.scenario_chooser = ScenarioChooserWidget()
 
-        self.version_label = QtWidgets.QLabel('')
+        self.version_label = QtWidgets.QLabel("")
 
         self.construct_layout()
         self.version_check()
@@ -37,7 +38,7 @@ class RightTab(PluginTab):
         self.layout.setAlignment(QtCore.Qt.AlignTop)
 
         # Header
-        self.layout.addWidget(header(self.plugin.infos['name']))
+        self.layout.addWidget(header(self.plugin.infos["name"]))
         self.layout.addWidget(horizontal_line())
 
         # Folds chooser
@@ -76,8 +77,8 @@ class RightTab(PluginTab):
     def version_check(self) -> None:
         newer, current, latest = UpdateManager.get_versions()
         if newer:
-            label = 'A newer version of ScenarioLink is available (your version: {}, the newest version: {})'\
-                .format(current, latest)
+            label = (f"A newer version of ScenarioLink is available (your version: {current}, "
+                     f"the newest version: {latest})")
             self.version_label.setText(label)
 
 
@@ -89,17 +90,17 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.custom_package_path = None
 
         # label
-        self.label = QtWidgets.QLabel('Select the datapackage you want to use')
+        self.label = QtWidgets.QLabel("Select the datapackage you want to use")
         self.layout.addWidget(self.label)
 
         # Radio buttons to choose where to get Fold from
-        self.radio_default = QtWidgets.QRadioButton('Online datapackages')
+        self.radio_default = QtWidgets.QRadioButton("Online datapackages")
         self.radio_default.setChecked(True)
-        self.radio_custom = QtWidgets.QRadioButton('Local datapackages')
-        self.clear_datapackage_cache = QtWidgets.QPushButton('Clear datapackage cache')
+        self.radio_custom = QtWidgets.QRadioButton("Local datapackages")
+        self.clear_datapackage_cache = QtWidgets.QPushButton("Clear datapackage cache")
         self.clear_datapackage_cache.setToolTip(
-            'ScenarioLink caches the downloaded datapackages, though sometimes\n'
-            'these may be updated and you need to clear the cache.'
+            "ScenarioLink caches the downloaded datapackages, though sometimes\n"
+            "these may be updated and you need to clear the cache."
         )
         self.radio_layout = QtWidgets.QHBoxLayout()
         self.radio_layout.addWidget(self.radio_default)
@@ -111,21 +112,21 @@ class FoldChooserWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.radio_widget)
 
         # Folds table
-        self.table_label = QtWidgets.QLabel('Doubleclick to open a datapackage (if not present locally, it will be downloaded - this may take a while).')
+        self.table_label = QtWidgets.QLabel("Doubleclick to open a datapackage (if not present locally, it will be downloaded - this may take a while).")
         self.layout.addWidget(self.table_label)
 
         self.folds_table = FoldsTable(self)
         self.use_table = True  # bool to see if we need to read this table or instead read the local import
-        if self.folds_table.model.df_columns.get('link', False):
-            self.folds_table.setToolTip('Doubleclick to open a datapackage\n'
-                                        'Right click to open a dashboard with more information')
+        if self.folds_table.model.df_columns.get("link", False):
+            self.folds_table.setToolTip("Doubleclick to open a datapackage\n"
+                                        "Right click to open a dashboard with more information")
         else:
-            self.folds_table.setToolTip('Doubleclick to open a datapackage')
+            self.folds_table.setToolTip("Doubleclick to open a datapackage")
         self.layout.addWidget(self.folds_table)
 
         # Fold custom importer
         self.custom_layout = QtWidgets.QHBoxLayout()
-        self.custom = QtWidgets.QPushButton('Browse computer')
+        self.custom = QtWidgets.QPushButton("Browse computer")
         self.custom.setVisible(False)
         self.custom_layout.addWidget(self.custom)
         self.custom_layout.addStretch()
@@ -154,14 +155,14 @@ class FoldChooserWidget(QtWidgets.QWidget):
         """"Start a dialog to retrieve a datapackage from disk."""
         path, _ = QtWidgets.QFileDialog.getOpenFileName(
             caption="Select datapackage zip file",
-            filter='*.zip'
+            filter="*.zip"
         )
-        print('file selected from path:', path)
+        log.info(f"file selected from path: {path}")
         self.custom_package_path = path
         signals.get_datapackage_from_disk.emit(path)
 
     def do_clear_cache(self) -> None:
-        print('Clearing the datapackage cache')
+        log.info("Clearing the datapackage cache")
         clear_sl_datapackage_cache()
         self.folds_table.model.sync()
 
@@ -174,7 +175,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.sdf_path = None
 
         # Label
-        self.label = QtWidgets.QLabel('Choose the scenarios you want to install')
+        self.label = QtWidgets.QLabel("Choose the scenarios you want to install")
         self.layout.addWidget(self.label)
 
         # Datapackage table
@@ -182,14 +183,14 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.layout.addWidget(self.data_package_table)
 
         # SDF checker
-        self.sdf_check = QtWidgets.QCheckBox('Produce Superstructure database')
+        self.sdf_check = QtWidgets.QCheckBox("Produce Superstructure database")
         self.sdf_check.setChecked(False)
         self.sdf_check.setEnabled(False)
         self.sdf_name_field = QtWidgets.QLineEdit()
-        self.sdf_name_field.setPlaceholderText('Superstructure database name (optional)')
+        self.sdf_name_field.setPlaceholderText("Superstructure database name (optional)")
         self.sdf_name_field.setEnabled(False)
-        self.sdf_file_loc = QtWidgets.QPushButton('SDF location')
-        self.sdf_file_loc.setToolTip('Choose a folder to export the SDF scenario file to')
+        self.sdf_file_loc = QtWidgets.QPushButton("SDF location")
+        self.sdf_file_loc.setToolTip("Choose a folder to export the SDF scenario file to")
         self.sdf_file_loc.setEnabled(False)
 
         self.sdf_layout = QtWidgets.QHBoxLayout()
@@ -198,20 +199,20 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.sdf_layout.addWidget(self.sdf_file_loc)
         self.sdf_layout.addStretch()
         self.sdf_widget = QtWidgets.QWidget()
-        self.sdf_widget.setToolTip('Instead of writing multiple databases per scenario,\n'
-                                   'write one database and an SDF scenario difference file')
+        self.sdf_widget.setToolTip("Instead of writing multiple databases per scenario,\n""
+                                   "write one database and an SDF scenario difference file")
         self.sdf_widget.setLayout(self.sdf_layout)
         self.layout.addWidget(self.sdf_widget)
 
         # Import button
-        self.import_b = QtWidgets.QPushButton('Import')
+        self.import_b = QtWidgets.QPushButton("Import")
         self.import_b.setEnabled(False)
         self.import_layout = QtWidgets.QHBoxLayout()
         self.import_layout.addWidget(self.import_b)
         self.import_layout.addStretch()
-        self.clear_unfold_cache = QtWidgets.QPushButton('Clear unfold cache')
-        self.clear_unfold_cache.setToolTip('Unfold caches some data to work faster, though sometimes this can store old data\n'
-                                    'that should be renewed, clearing the cache allows new data to be cached.')
+        self.clear_unfold_cache = QtWidgets.QPushButton("Clear unfold cache")
+        self.clear_unfold_cache.setToolTip("Unfold caches some data to work faster, though sometimes this can store old data\n"
+                                    "that should be renewed, clearing the cache allows new data to be cached.")
         self.import_layout.addWidget(self.clear_unfold_cache)
         self.import_b_widg = QtWidgets.QWidget()
         self.import_b_widg.setLayout(self.import_layout)
@@ -228,7 +229,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         self.sdf_file_loc.clicked.connect(self.choose_sdf_location)
 
     def do_clear_cache(self):
-        print('Clearing the unfold cache')
+        log.info("Clearing the unfold cache")
         clear_cache()
 
     def import_state(self):
@@ -238,8 +239,8 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
 
         # match the dependencies (databases) of the scenarios to the correct databases in AB
         dependencies = []
-        for dependency in self.data_package_table.model.data_package.descriptor['dependencies']:
-            dependencies.append(dependency['name'])
+        for dependency in self.data_package_table.model.data_package.descriptor["dependencies"]:
+            dependencies.append(dependency["name"])
         dependencies = self.relink_database(dependencies)
         if not dependencies:
             return
@@ -247,15 +248,15 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         # read/set the correct data for SDF
         as_sdf = self.sdf_check.isChecked()
         sdf_db = self.sdf_name_field.text()
-        if sdf_db == '' and not as_sdf:
+        if sdf_db == "" and not as_sdf:
             sdf_db = None
-        elif sdf_db == '' and as_sdf:
+        elif sdf_db == "" and as_sdf:
             # no name was chosen for the superstructure, generate a descriptive name
-            db = [db for db in dependencies.values() if db != 'biosphere3'][0]  # get db name
+            db = [db for db in dependencies.values() if db != "biosphere3"][0]  # get db name
             scn = self.data_package_table.model.scenario_name
-            sdf_db = ' - '.join([db, scn])
+            sdf_db = " - ".join([db, scn])
         sdf_loc = self.sdf_file_loc
-        if sdf_loc == '':
+        if sdf_loc == "":
             sdf_loc = None
 
         # start database generation
@@ -310,7 +311,7 @@ class RelinkDialog(DatabaseLinkingDialog):
 
     @classmethod
     def relink_scenario_link(cls, options: List[Tuple[str, List[str]]],
-                     parent=None) -> 'RelinkDialog':
+                     parent=None) -> "RelinkDialog":
         label = "Choose the ScenarioLink databases.\nBy clicking 'OK', you start the import."
         return cls.construct_dialog(label, options, parent)
 

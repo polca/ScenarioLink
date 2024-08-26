@@ -17,10 +17,14 @@ from importlib.metadata import version, PackageNotFoundError
 from typing import Tuple
 from tqdm import tqdm
 import hashlib
+from logging import getLogger
 
 from PySide2 import QtWidgets
 from PySide2.QtWidgets import QApplication
 from PySide2.QtCore import Qt
+
+
+log = getLogger(__name__)
 
 
 def unfold_databases(
@@ -49,7 +53,7 @@ def unfold_databases(
 
     if not os.path.exists(file):
         # we only received a recordID (not a valid path), convert to path
-        cache_folder = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
+        cache_folder = appdirs.user_cache_dir("ActivityBrowser", "ActivityBrowser")
         filename = f"{file}.zip"
         filepath = os.path.join(cache_folder, os.path.basename(filename))
     else:
@@ -68,25 +72,25 @@ def unfold_databases(
             export_dir=superstructure_sdf_location
         )
     except Exception as e:
-        print(f"Failed to unfold database: {e}")
+        log.error(f"Failed to unfold database: {e}")
         return
 
 def download_file_with_progress(file_url, output_path):
     # Function to download a file with a progress bar
     with requests.get(file_url, stream=True, timeout=100, allow_redirects=True) as response:
         response.raise_for_status()
-        total_size = int(response.headers.get('content-length', 0))
+        total_size = int(response.headers.get("content-length", 0))
         block_size = 1024  # Adjust the block size as needed
 
         with tqdm(
                 total=total_size,
-                unit='B',
+                unit="B",
                 unit_scale=True,
                 unit_divisor=block_size,
                 dynamic_ncols=True,  # Allow dynamic resizing of the progress bar
                 desc=os.path.basename(output_path),
         ) as progress_bar:
-            with open(output_path, 'wb') as file:
+            with open(output_path, "wb") as file:
                 for data in response.iter_content(block_size):
                     progress_bar.update(len(data))
                     file.write(data)
@@ -105,7 +109,7 @@ def verify_file_integrity(file_path, expected_hash):
 
         return file_hash.hexdigest() == expected_hash
     except Exception as e:
-        print(f"Error verifying file integrity: {e}")
+        log.error(f"Error verifying file integrity: {e}")
         return False
 
 def download_files_from_zenodo(record_id: str) -> [Package, None]:
@@ -134,27 +138,27 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
     url = f"https://zenodo.org/api/records/{record_id}/files"
 
     # Create a folder to save the downloaded files
-    folder_name = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
+    folder_name = appdirs.user_cache_dir("ActivityBrowser", "ActivityBrowser")
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
-    print("Cache folder: ", folder_name)
+    log.info(f"Cache folder: {folder_name}")
 
     # Define the ZIP filename based on the Zenodo record ID
     zip_filename = f"{record_id}.zip"
 
     # Check if the file already exists; if so, return the Package
     if record_cached(record_id):
-        print(f"File {zip_filename} already exists in cache.")
+        log.info(f"File {zip_filename} already exists in cache.")
         return Package(os.path.join(folder_name, zip_filename))
 
-    print(f"Fetching data from Zenodo: {url}")
+    log.info(f"Fetching data from Zenodo: {url}")
 
     # Perform GET request to fetch the raw JSON content
     try:
         response = requests.get(url, timeout=100)
     except Exception as e:
-        print(f"Failed to get data from Zenodo. Error: {e}")
+        log.error(f"Failed to get data from Zenodo. Error: {e}")
         return retry_dialog()
 
     json_data = response.json()
@@ -163,9 +167,9 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
     QApplication.setOverrideCursor(Qt.WaitCursor)
 
     # Create a final ZIP file to store the downloaded files
-    with zipfile.ZipFile(os.path.join(folder_name, zip_filename), 'w') as final_zip:
-        for idx, file_info in enumerate(json_data['entries']):
-            print(f"Downloading file {idx + 1}/{len(json_data['entries'])}")
+    with zipfile.ZipFile(os.path.join(folder_name, zip_filename), "w") as final_zip:
+        for idx, file_info in enumerate(json_data["entries"]):
+            log.info(f"Downloading file {idx + 1}/{len(json_data['entries'])}")
             file_url = f"{file_info['links']['content']}"
             download_tmpdirname = tempfile.TemporaryDirectory().name
             # Create a temporary directory to store the downloaded ZIP file
@@ -175,27 +179,27 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
             try:
                 download_file_with_progress(file_url, downloaded_zip_path)
             except Exception as e:
-                print(f'Download failed {e}')
+                log.error(f"Download failed {e}")
                 return retry_dialog()
 
             # Verify the integrity of the downloaded file
             # fetch the MD5 hash from the JSON
-            expected_hash = file_info['checksum'][4:]
+            expected_hash = file_info["checksum"][4:]
 
             if verify_file_integrity(downloaded_zip_path, expected_hash):
-                print(f"File {idx + 1} verified successfully.")
+                log.info(f"File {idx + 1} verified successfully.")
             else:
-                print(f"File {idx + 1} verification failed. Deleting {downloaded_zip_path}.")
+                log.warning(f"File {idx + 1} verification failed. Deleting {downloaded_zip_path}.")
                 # Delete the temporary and final files if the hash doesn't match
                 os.remove(downloaded_zip_path)
                 os.remove(os.path.join(folder_name, zip_filename))
-                print("File verification failed.")
+                log.warning("File verification failed.")
                 return retry_dialog()
 
             # Create another temporary directory for the extracted files
             with tempfile.TemporaryDirectory() as extract_tmpdirname:
                 # Extract the ZIP file's contents
-                with zipfile.ZipFile(downloaded_zip_path, 'r') as downloaded_zip:
+                with zipfile.ZipFile(downloaded_zip_path, "r") as downloaded_zip:
                     downloaded_zip.extractall(extract_tmpdirname)
 
                 # Add the extracted files to the final ZIP file
@@ -205,7 +209,7 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
                         relative_path = os.path.relpath(os.path.join(root, file), extract_tmpdirname)
                         # Add the file to the ZIP archive with its relative path
                         final_zip.write(os.path.join(root, file), relative_path)
-        print("Done.")
+        log.info("Done.")
     # Restore the original cursor
     QApplication.restoreOverrideCursor()
 
@@ -213,23 +217,23 @@ def download_files_from_zenodo(record_id: str) -> [Package, None]:
 
 def package_from_path(path: str) -> [Package, None]:
     """Create a package from the selected zip file"""
-    if not path.endswith('.zip'):
-        print("Error, file selected is not a .zip file.")
+    if not path.endswith(".zip"):
+        log.error("Error, file selected is not a .zip file.")
         return
     return Package(path)
 
 def record_cached(record: str) -> bool:
     """Return if record is cached."""
-    folder_name = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
+    folder_name = appdirs.user_cache_dir("ActivityBrowser", "ActivityBrowser")
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
 
-    zip_filename = record + '.zip'
+    zip_filename = record + ".zip"
     return os.path.exists(os.path.join(folder_name, zip_filename))
 
 def clear_sl_datapackage_cache() -> None:
     """Clear all datapackages from the ScenarioLink cache"""
-    folder_name = appdirs.user_cache_dir('ActivityBrowser', 'ActivityBrowser')
+    folder_name = appdirs.user_cache_dir("ActivityBrowser", "ActivityBrowser")
     if not os.path.exists(folder_name):
         # the cache folder does not exist, so nothing to clear
         return
@@ -254,7 +258,7 @@ class UpdateManager():
         current = cls._current_version(cls)
         latest = cls._fetch_latest(cls)
 
-        for c, l in zip(current.split('.'), latest.split('.')):
+        for c, l in zip(current.split("."), latest.split(".")):
             if int(l) > int(c):
                 return (True, current, latest)
         return (False, current, latest)
@@ -262,12 +266,13 @@ class UpdateManager():
     def _fetch_latest(self) -> str:
         """Fetch the latest version number from conda channel."""
         try:
-            package_url = 'https://anaconda.org/romainsacchi/ab-plugin-scenariolink/labels'
-            page = requests.get(package_url)  # retrieve the page from the URL
+            package_url = "https://anaconda.org/romainsacchi/ab-plugin-scenariolink/labels"
+            page = requests.get(package_url, timeout=3)  # retrieve the page from the URL
             df = pd.read_html(io.StringIO(page.text))[0]  # read the version table from the HTML
             latest = df.iloc[0, 1]
-        except:  # TODO log error properly and handle it properly
-            latest = '0.0.0'
+        except Exception as e:
+            log.debug(f"Could not retrieve latest plugin version with error: {e}")
+            latest = "0.0.0"
         return latest
 
     def _current_version(self) -> str:

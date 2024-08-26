@@ -2,12 +2,15 @@
 This module contains the models for the tables used in the ScenarioLink plugin.
 """
 
+from logging import getLogger
 from urllib.error import HTTPError, URLError
 import pandas as pd
 
 from activity_browser.ui.tables.models import PandasModel
 from ..utils import download_files_from_zenodo, package_from_path, record_cached
 from ..signals import signals
+
+log = getLogger(__name__)
 
 
 class FoldsModel(PandasModel):
@@ -43,27 +46,27 @@ class FoldsModel(PandasModel):
             dataframe = pd.read_csv(url + "?nocache", header=0, sep=";", dtype=str)
 
             cached = []
-            rec_col = dataframe.columns.tolist().index('Zenodo record ID')
+            rec_col = dataframe.columns.tolist().index("Zenodo record ID")
             for idx, row in dataframe.iterrows():
                 record_id = row.values.tolist()[rec_col]
                 cached.append(record_cached(record_id))
-            dataframe['downloaded'] = cached
+            dataframe["downloaded"] = cached
 
             self._dataframe = dataframe
         except (HTTPError, URLError) as exception:
-            print('++Failed to import data:', exception)
+            log.error(f"Failed to import data: {exception}")
 
         self.df_columns = {n: i for i, n in enumerate(dataframe.columns.tolist())}
         self.updated.emit()
 
     def get_record(self, idx):
         """Retrieve a record from a selected row in the DataFrame."""
-        record = self._dataframe.iat[idx.row(), self.df_columns['Zenodo record ID']]
+        record = self._dataframe.iat[idx.row(), self.df_columns["Zenodo record ID"]]
         self.selected_record = record
         return record
 
     def get_link(self, row: int) -> str:
-        return self._dataframe.iloc[row, self.df_columns['link']]
+        return self._dataframe.iloc[row, self.df_columns["link"]]
 
     def record_ready(self, ready: bool) -> None:
         if ready:
@@ -100,8 +103,8 @@ class DataPackageModel(PandasModel):
             return
 
         datapackage = self.data_package
-        dataframe = self.build_df_from_descriptor(datapackage.descriptor['scenarios'])
-        dataframe = dataframe.reindex(columns=['include', 'name', 'description'])
+        dataframe = self.build_df_from_descriptor(datapackage.descriptor["scenarios"])
+        dataframe = dataframe.reindex(columns=["include", "name", "description"])
 
         self._dataframe = dataframe
         self.updated.emit()
@@ -122,7 +125,7 @@ class DataPackageModel(PandasModel):
             if len(self.include) <= 1:
                 signals.no_or_1_scenario_selected.emit(True)
 
-        data = {'include': self.include}
+        data = {"include": self.include}
 
         for dict_ in descr:
             for key, value in dict_.items():
@@ -131,7 +134,7 @@ class DataPackageModel(PandasModel):
                 else:
                     data[key] = [value]
 
-        name = data.get('name', [False])[0]
+        name = data.get("name", [False])[0]
         if name:
             # this only works because we know a scenario name ends in ' - YYYY', if that changes, this fails
             self.scenario_name = name[:-7]
