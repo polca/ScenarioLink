@@ -19,7 +19,7 @@ The Activity Browser builds upon the [Brightway2](https://brightway.dev) LCA fra
 
 ## Requirements
 
-- ``activty-browser >= 2.9.7, < 2.10.0``
+- ``activty-browser > 2.10.0``
 
 ## Installation
 

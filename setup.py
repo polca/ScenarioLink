@@ -17,16 +17,23 @@ for dirpath, dirnames, filenames in os.walk("ab_plugin_scenariolink"):
             pkg = pkg.replace(os.path.altsep, ".")
         packages.append(pkg)
 
+if "VERSION" in os.environ:
+    version = os.environ["VERSION"]
+elif "PKG_VERSION" in os.environ:
+    version = os.environ["PKG_VERSION"]
+else:
+    version = os.environ.get("GIT_DESCRIBE_TAG", "0.0.0")
+
 setup(
     name="ab_plugin_scenariolink",
-    version="0.1.0",
+    version=version,
     packages=packages,
     include_package_data=True,
     author="Romain Sacchi, Marc van der Meide",
     author_email="romain.sacchi@psi.ch, m.t.van.der.meide@cml.leidenuniv.nl",
     license=open("LICENSE.txt").read(),
     install_requires=[
-        "activity-browser >=2.10.1",
+        "activity-browser >2.10.0",
         "unfold >=1.2.0",
         "datapackage",
         "pandas",
