@@ -26,7 +26,7 @@ setup(
     author_email="romain.sacchi@psi.ch, m.t.van.der.meide@cml.leidenuniv.nl",
     license=open("LICENSE.txt").read(),
     install_requires=[
-        "activity-browser >=2.9.7, <2.10",
+        "activity-browser >=2.10.1",
         "unfold >=1.2.0",
         "datapackage",
         "pandas",
