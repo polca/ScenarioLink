@@ -3,8 +3,8 @@ from PySide2.QtCore import Qt
 import brightway2 as bw
 from typing import List, Tuple
 from unfold.unfold import clear_cache
+from logging import getLogger
 
-from activity_browser import log
 from activity_browser.layouts.tabs import PluginTab
 from activity_browser.ui.style import horizontal_line, header
 from activity_browser.ui.widgets.dialog import DatabaseLinkingDialog
@@ -13,6 +13,8 @@ from activity_browser.signals import signals as ab_signals
 from ...tables.tables import FoldsTable, DataPackageTable
 from ...signals import signals
 from ...utils import unfold_databases, clear_sl_datapackage_cache, UpdateManager
+
+log = getLogger(__name__)
 
 class RightTab(PluginTab):
     def __init__(self, plugin, parent=None):
