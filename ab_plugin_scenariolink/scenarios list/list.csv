@@ -1,4 +1,6 @@
 generator;generator version;creation date;scope;model;scenario;source database;link;Zenodo record ID
+premise;2.1.1;2024-09-06;Global;remind;pathway;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"13711628"
+premise;2.1.1;2024-09-06;Global;remind;pathway;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"13711636"
 premise;2.1.0;2024-05-19;Global;remind;SSP2-Base;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11226182"
 premise;2.1.0;2024-05-19;Global;remind;SSP2-NDC;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11223687"
 premise;2.1.0;2024-05-19;Global;remind;SSP2-NPi;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11223721"
