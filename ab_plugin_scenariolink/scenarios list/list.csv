@@ -1,19 +1,39 @@
 generator;generator version;creation date;scope;model;scenario;source database;link;Zenodo record ID
-premise;2.1.1;2024-09-06;Global;remind;pathway;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"13711628"
-premise;2.1.1;2024-09-06;Global;remind;pathway;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"13711636"
-premise;2.1.0;2024-05-19;Global;remind;SSP2-Base;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11226182"
-premise;2.1.0;2024-05-19;Global;remind;SSP2-NDC;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11223687"
-premise;2.1.0;2024-05-19;Global;remind;SSP2-NPi;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11223721"
-premise;2.1.0;2024-05-19;Global;remind;SSP2-PkBudg1150;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11223803"
-premise;2.1.0;2024-05-19;Global;remind;SSP2-PkBudg500;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11223760"
-premise;2.1.0;2024-05-19;Global;image;SSP1-Base;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11218228"
-premise;2.1.0;2024-05-19;Global;image;SSP2-Base;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11218235"
-premise;2.1.0;2024-05-19;Global;image;SSP2-RCP26;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11218248"
-premise;2.1.0;2024-05-19;Global;image;SSP2-RCP19;ecoinvent 3.9 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;"11218275"
-premise;2.1.0;2024-05-19;Global;image;SSP1-Base;ecoinvent 3.9 conseq.;https://premisedash-6f5a0259c487.herokuapp.com/;"11271780"
-premise;2.1.0;2024-05-19;Global;image;SSP2-Base;ecoinvent 3.9 conseq.;https://premisedash-6f5a0259c487.herokuapp.com/;"11271864"
-premise;2.1.0;2024-05-19;Global;image;SSP2-RCP26;ecoinvent 3.9 conseq.;https://premisedash-6f5a0259c487.herokuapp.com/;"11279372"
-premise;2.1.0;2024-05-19;Global;image;SSP2-RCP19;ecoinvent 3.9 conseq.;https://premisedash-6f5a0259c487.herokuapp.com/;"11279443"
-premise;1.8.2.dev1;2023-12-05;Switzerland;image/EP 2050+;BAU & ZERO;ecoinvent 3.9 cutoff;https://github.com/premise-community-scenarios/energy-perspective-2050-switzerland;"10259709"
-premise;1.8.2.dev1;2023-12-05;Global;image/Cobalt;BAU & Sustainable development;ecoinvent 3.9 cutoff;https://github.com/premise-community-scenarios/cobalt-perspective-2050;"10259754"
-premise;2.1.1;2024-06-07;Global;image/Ammonia;BAU & Sustainable development;ecoinvent 3.9 cutoff;https://github.com/premise-community-scenarios/ammonia-prospective-scenarios;"11516488"
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-PkBudg1150;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712109
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-Base;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712111
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-NDC;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712113
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-Base;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712115
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-NPi;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712123
+premise;(2, 1, 2);2024-09-06;Global;image;SSP1-Base;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712140
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-NDC;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712142
+premise;(2, 1, 2);2024-09-06;Global;image;SSP1-Base;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712144
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-NDC;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712146
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-PkBudg1150;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712150
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-PkBudg1150;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712152
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-NDC;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712154
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-Base;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712156
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-NPi;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712158
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-Base;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712162
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-NPi;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712164
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-PkBudg500;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712167
+premise;(2, 1, 2);2024-09-06;Global;image;SSP2-Base;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712169
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-PkBudg500;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712171
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-NDC;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712174
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-PkBudg1150;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712176
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-NPi;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712178
+premise;(2, 1, 2);2024-09-06;Global;image;SSP2-RCP19;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712182
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-PkBudg500;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712198
+premise;(2, 1, 2);2024-09-06;Global;image;SSP2-RCP26;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712200
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-Base;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712202
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-PkBudg500;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712206
+premise;(2, 1, 2);2024-09-06;Global;image;SSP2-RCP26;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712208
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-Base;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712212
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-NPi;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712214
+premise;(2, 1, 2);2024-09-06;Global;image;SSP2-RCP19;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712216
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-PkBudg1150;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712218
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-PkBudg500;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712220
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP2-NPi;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712224
+premise;(2, 1, 2);2024-09-06;Global;image;SSP2-Base;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712226
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP1-PkBudg500;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712228
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-PkBudg1150;ei 3.9.1 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712233
+premise;(2, 1, 2);2024-09-06;Global;remind;SSP5-NDC;ei 3.10 cutoff;https://premisedash-6f5a0259c487.herokuapp.com/;13712235
