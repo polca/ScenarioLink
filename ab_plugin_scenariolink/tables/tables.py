@@ -38,6 +38,9 @@ class FoldsTable(ABDataFrameView):
             QtWidgets.QSizePolicy.Maximum
         ))
 
+        # add a maximum height to the table
+        self.setMaximumHeight(400)
+
         self.model = FoldsModel(parent=self)
         self._connect_signals()
         self.model.sync()
