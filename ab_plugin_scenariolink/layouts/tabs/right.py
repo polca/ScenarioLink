@@ -73,7 +73,6 @@ class RightTab(PluginTab):
         unfold_databases(file, include_scenarios, dependencies, as_superstructure,
                          superstructure_db_name, superstructure_sdf_location)
         # update AB databases table
-        ab_signals.databases_changed.emit()
         QtWidgets.QApplication.restoreOverrideCursor()
 
     def version_check(self) -> None:
