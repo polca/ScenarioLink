@@ -25,7 +25,7 @@ requirements:
     - pandas
     - python
     - setuptools
-    - unfold >=2024.09.29
+    - unfold >=2024.11.27
   run:
     - activity-browser
     - unfold
