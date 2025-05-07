@@ -54,5 +54,5 @@ jobs:
       - name: Upload to anaconda.org
         run: |
           anaconda -t ${{ secrets.CONDA_UPLOAD_TOKEN }} upload \
-          /usr/share/miniconda/envs/build/conda-bld/noarch/*.tar.bz2
-          anaconda -t ${{ secrets.CONDA_UPLOAD_TOKEN }} upload ci/conda-envs/ab.yml
+          /usr/share/miniconda/envs/build/conda-bld/noarch/*.conda
+
