@@ -270,6 +270,7 @@ class UpdateManager():
             page = requests.get(package_url, timeout=3)  # retrieve the page from the URL
             df = pd.read_html(io.StringIO(page.text))[0]  # read the version table from the HTML
             latest = df.iloc[0, 1]
+            assert type(latest) == str
         except Exception as e:
             log.debug(f"Could not retrieve latest plugin version with error: {e}")
             latest = "0.0.0"
