@@ -256,7 +256,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
             db = [db for db in dependencies.values() if db != "biosphere3"][0]  # get db name
             scn = self.data_package_table.model.scenario_name
             sdf_db = " - ".join([db, scn])
-        sdf_loc = self.sdf_file_location
+        sdf_loc = self.sdf_file_loc
         if sdf_loc == "":
             sdf_loc = None
 
@@ -268,7 +268,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
             sdf_db,  # superstructure database name (str or None)
             sdf_loc  # superstructure SDF file location (str or None)
         )
-        self.sdf_file_location = None
+        self.sdf_file_loc = None
 
     def relink_database(self, depends: list) -> dict:
         """Relink technosphere exchanges within the given Fold."""
@@ -303,7 +303,7 @@ class ScenarioChooserWidget(QtWidgets.QWidget):
         path = QtWidgets.QFileDialog.getExistingDirectory(
             caption="Select location to export SDF file to",
         )
-        self.sdf_file_location = path
+        self.sdf_file_loc = path
 
 
 class RelinkDialog(DatabaseLinkingDialog):
